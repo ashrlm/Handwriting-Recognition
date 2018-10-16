@@ -5,6 +5,12 @@ This project uses neural networks to solve the problem of handwritten digit
 recognition. It uses the MNIST database (http://yann.lecun.com/exdb/mnist/) for
 training and testing
 
+
+### Dependencies
+This program requires the `python-mnist` package from PyPI.
+This can be installed by running `python -m pip install python-mnist` from the
+command line
+
 ### Structure
 This structure of the network used in this neural network is:
 - 784 Input Neurons
