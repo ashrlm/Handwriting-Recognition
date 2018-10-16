@@ -19,4 +19,4 @@ the commmand line to allow the usage of flags
 
 ##### Flags
 - -t, --test: Switch into test mode
-- -d <dataset>, --dataset <dataset>: Specify custom dataset to use
+- -d \<dataset>, --dataset <dataset>: Specify custom dataset to use
