@@ -43,7 +43,6 @@ class Network():
     def activate(self, img):
 
         for input_neuron, px_val in zip(self.layers[0].neurons, img):
-            #print(px_val)
             input_neuron.output = px_val
 
         for layer in self.layers[1:]:
@@ -54,7 +53,6 @@ class Network():
         dataset = load_dataset('dataset')
         train_img = list(dataset[0][0])
         train_labels = dataset[1]
-        print(len(train_labels), len(train_img))
 
         costs = []
 
@@ -99,7 +97,6 @@ class Neuron():
         if not self.input_neuron:
             weighted_input = 0
             for input in self.inputs:
-                #print(input.neurons[0].output, input.weight)
                 weighted_input += input.neurons[0].output * input.weight
             self.output = sigmoid(weighted_input)
 
