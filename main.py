@@ -40,8 +40,12 @@ class Network():
                 new_neuron.inputs.append(new_conn)
                 self.connections.append(new_conn)
 
-    def activate(self):
-        for layer in self.layers:
+    def activate(self, img):
+
+        for input_neuron, px_val in zip(self.layers[0].neurons, img):
+            input_neuron.output = px_val
+
+        for layer in self.layers[1:]:
             for neuron in layer.neurons:
                 neuron.activate()
 
@@ -53,6 +57,9 @@ class Network():
         costs = []
 
         for img, label in zip(train_img, train_labels):
+
+            network.activate(img)
+
             expected_out = [0] * 10
             expected_out[label] = 1
 
