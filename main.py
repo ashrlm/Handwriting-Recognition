@@ -1,11 +1,12 @@
 import math
+import random
 
 import sympy #Calculation of partial derivatives
 from mnist import MNIST #Reading of datasets
 
 class Network():
     def __init__(self):
-        self.layers = [Layer()]
+        self.layers = [Layer([])]
         self.neurons = []
         self.connections = []
         self.input_neurons = []
@@ -19,20 +20,25 @@ class Network():
         for i in range(2): #Hidden layer generation
             self.layers.append(Layer([]))
             for i in range(10):
-                new_neuron = Neuron()
+                new_neuron = Neuron([])
                 self.neurons.append(new_neuron)
-                for neuron in self.layers[-1].neurons:
+                self.layers[-1].neurons.append(new_neuron)
+                for neuron in self.layers[-2].neurons: #Add connections to all neurons from last layer
                     new_conn = Connection(
                         (neuron, new_neuron)
                     )
-
                     new_neuron.inputs.append(new_conn)
                     self.connections.append(new_conn)
 
         for i in range(10): #Output layer generation
-            pass
-
-
+            new_neuron = Neuron([])
+            self.neurons.append(new_neuron)
+            for neuron in self.layers[-1].neurons: #Add connection to all neurons from last layer
+                new_conn = Connection(
+                    (neuron, new_neuron)
+                )
+                new_neuron.inputs.append(new_conn)
+                self.connections.append(new_conn)
 
     def activate(self):
         for layer in self.layers:
@@ -53,9 +59,9 @@ class Layer():
         self.neurons = neurons
 
 class Connection():
-    def __init__(self, neurons, weight):
+    def __init__(self, neurons):
         self.neurons = neurons
-        self.weight = weight
+        self.weight = random.uniform(-1,1)
 
 class Neuron():
     def __init__(self, inputs, output=None):
@@ -63,6 +69,7 @@ class Neuron():
             self.output = output
             self.input_neuron = True
         self.inputs = inputs #List of connection objects
+        self.bias = random.uniform(-1, 1) #Generate bias
 
     def activate(self):
         if not self.input_neuron:
@@ -82,7 +89,7 @@ def load_dataset(ds_path, training=True):
         return dataset.load_testing()
 
 def main():
-    Network()
+    v = Network()
 
 if __name__ == "__main__":
     main()

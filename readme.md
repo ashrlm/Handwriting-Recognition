@@ -16,8 +16,8 @@ command line
 ### Structure
 This structure of the network used in this neural network is:
 - 784 Input Neurons
-- 3 Hidden Layers
-  - 8 Neurons per layer
+- 2 Hidden Layers
+  - 10 Neurons per layer
 - 10 Output Neurons
 
 ### Usage
