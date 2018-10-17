@@ -46,7 +46,21 @@ class Network():
                 neuron.activate()
 
     def cost(self):
-        pass
+        dataset = load_dataset('dataset')
+        train_img = dataset[0]
+        train_labels = dataset[1]
+
+        costs = []
+
+        for img, label in zip(train_img, train_labels):
+            expected_out = [0] * 10
+            expected_out[label] = 1
+
+            for neuron, expected in zip(self.layers[-1].neurons, expected_out):
+                costs.append((neuron.output - expected_out) ** 2)
+
+        self.cost = sum(cost) / len(cost)
+
 
     def part_deriv(self):
         pass
