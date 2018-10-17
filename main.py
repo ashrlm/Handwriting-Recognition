@@ -241,7 +241,10 @@ def main():
     dataset = 'dataset'
     for arg in sys.argv:
         if '-d' in arg:
-            dataset = sys.argv[sys.argv.index(arg)+1]
+            try:
+                dataset = sys.argv[sys.argv.index(arg)+1]
+            except:
+                raise IndexError("Dataset must be supplied after", arg, "flag")
 
     network = Network(dataset)
 
