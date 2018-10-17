@@ -43,6 +43,7 @@ class Network():
     def activate(self, img):
 
         for input_neuron, px_val in zip(self.layers[0].neurons, img):
+            #print(px_val)
             input_neuron.output = px_val
 
         for layer in self.layers[1:]:
@@ -51,20 +52,21 @@ class Network():
 
     def cost(self):
         dataset = load_dataset('dataset')
-        train_img = dataset[0]
+        train_img = list(dataset[0][0])
         train_labels = dataset[1]
+        print(len(train_labels), len(train_img))
 
         costs = []
 
         for img, label in zip(train_img, train_labels):
 
-            network.activate(img)
+            self.activate(img)
 
             expected_out = [0] * 10
             expected_out[label] = 1
 
             for neuron, expected in zip(self.layers[-1].neurons, expected_out):
-                costs.append((neuron.output - expected_out) ** 2)
+                costs.append((neuron.output - expected) ** 2)
 
         self.cost = sum(cost) / len(cost)
 
@@ -86,6 +88,7 @@ class Connection():
 
 class Neuron():
     def __init__(self, inputs, output=None):
+        self.input_neuron = False
         if output:
             self.output = output
             self.input_neuron = True
@@ -96,11 +99,20 @@ class Neuron():
         if not self.input_neuron:
             weighted_input = 0
             for input in self.inputs:
-                weighted_input += input.output * input.weight
+                #print(input.neurons[0].output, input.weight)
+                weighted_input += input.neurons[0].output * input.weight
             self.output = sigmoid(weighted_input)
 
 def sigmoid(x):
-    return 1/(1+(math.e ** -x))
+    try:
+        return 1/(1+(math.e ** -x))
+    except OverflowError:
+        if x > 0:
+            return 1
+        elif x < 0:
+            return -1
+        else:
+            return 0
 
 def load_dataset(ds_path, training=True):
     # NOTE: Returns (Dataset images, Dataset labels)
@@ -111,7 +123,8 @@ def load_dataset(ds_path, training=True):
         return (dataset.load_testing(), dataset.test_labels)
 
 def main():
-    pass
+    v=Network()
+    v.cost()
 
 if __name__ == "__main__":
     main()
