@@ -82,14 +82,15 @@ def sigmoid(x):
     return 1/(1+(math.e ** -x))
 
 def load_dataset(ds_path, training=True):
+    # NOTE: Returns (Dataset images, Dataset labels)
     dataset = MNIST(ds_path)
     if training:
-        return dataset.load_training()
+        return (dataset.load_training(), dataset.train_labels)
     else:
-        return dataset.load_testing()
+        return (dataset.load_testing(), dataset.test_labels)
 
 def main():
-    v = Network()
+    pass
 
 if __name__ == "__main__":
     main()
