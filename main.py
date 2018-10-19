@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import math
 import random
 
@@ -16,16 +18,13 @@ class Network():
         for img, val in zip(self.dataset[0], self.dataset[1]):
             self.img_sets[tuple(img)] = val
 
-        print(self.img_sets)
-
-
         self.layers = [Layer([])]
         self.neurons = []
         self.connections = []
         self.input_neurons = []
 
         for i in range(784): #Input layer generation
-            input_neuron = Neuron([])
+            input_neuron = Neuron([], input_neuron=True)
             self.neurons.append(input_neuron)
             self.layers[0].neurons.append(input_neuron)
             self.input_neurons.append(input_neuron)
@@ -53,39 +52,14 @@ class Network():
                 new_neuron.inputs.append(new_conn)
                 self.connections.append(new_conn)
 
-    def activate(self):
+    def activate(self, img):
 
-        # for img in self.dataset[0]:
-#
-            # for input_neuron, px_val in zip(self.layers[0].neurons, img):
-                # input_neuron.output = px_val
-                # print(type(px_val))
-#
-        # for layer in self.layers[1:]:
-            # for neuron in layer.neurons:
+        for px_val, neuron in zip(img, self.layers[0].neurons): #Set output on input neurons
+            neuron.output = px_val
 
-        pass
-
-
-    def cost(self):
-        # dataset = load_dataset('dataset')
-        # train_img = list(dataset[0][0])
-        # train_labels = dataset[1]
-#
-        # costs = []
-#
-        # for img, label in zip(train_img, train_labels):
-#
-            # self.activate(img)
-#
-            # expected_out = [0] * 10
-            # expected_out[label] = 1
-#
-            # for neuron, expected in zip(self.layers[-1].neurons, expected_out):
-                # costs.append((neuron.output - expected) ** 2)
-
-            pass
-
+        for layer in self.layers[1:]:
+            for neuron in layer.neurons:
+                neuron.activate()
 
     def backprop(self):
         pass
@@ -100,11 +74,9 @@ class Connection():
         self.weight = random.uniform(-1,1)
 
 class Neuron():
-    def __init__(self, inputs, output=None):
-        self.input_neuron = False
-        if output:
-            self.output = output
-            self.input_neuron = True
+
+    def __init__(self, inputs, input_neuron=None):
+        self.input_neuron = input_neuron
         self.inputs = inputs #List of connection objects
         self.bias = random.uniform(-1, 1) #Generate bias
 
@@ -135,7 +107,8 @@ def load_dataset(ds_path, training=True):
         return (dataset.load_testing()[0], dataset.test_labels)
 
 def main():
-    Network('dataset')
+    n=Network('dataset')
+    n.activate(random.choice(list(n.img_sets.keys())))
 
 if __name__ == "__main__":
     main()
