@@ -9,14 +9,21 @@ class Network():
     def __init__(self, ds, mbs=100, seed=1):
         self.dataset = load_dataset(ds, False) #Pull dataset, seperate for efficiency
         self.min_batch_size = mbs
-        self.img_sets = {}
+        self.img_sets = []
 
         for ds in self.dataset: #Randomly shuffle datasets
             random.seed(seed) #Seed to ensure images and values stay same
             random.shuffle(ds)
 
+        curr_set = {} #Generate miniset
         for img, val in zip(self.dataset[0], self.dataset[1]):
-            self.img_sets[tuple(img)] = val
+            if len(curr_set) % self.min_batch_size == 0 and len(curr_set):
+                self.img_sets.append(curr_set) #Add current set to image sets
+                curr_set = {}
+            else:
+                curr_set[tuple(img)] = val
+
+        self.img_sets.append(curr_set) #Add current set as otherwise never added
 
         self.layers = [Layer([])]
         self.neurons = []
@@ -62,7 +69,14 @@ class Network():
                 neuron.activate()
 
     def backprop(self):
-        pass
+        train_set = random.choice(self.img_sets)
+        weight_bias_changes = []
+
+        for train in train_set:
+            expected = [0] * 10
+            expected[train_set[train]] = 1
+            self.activate(train)
+            # TODO: Add code here to check weight_bias_changes for gradient descent
 
 class Layer():
     def __init__(self, neurons):
@@ -107,8 +121,7 @@ def load_dataset(ds_path, training=True):
         return (dataset.load_testing()[0], dataset.test_labels)
 
 def main():
-    n=Network('dataset')
-    n.activate(random.choice(list(n.img_sets.keys())))
+    pass
 
 if __name__ == "__main__":
     main()
