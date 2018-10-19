@@ -8,10 +8,8 @@ training and testing
 
 ### Dependencies
 This program requires the `python-mnist` package from PyPI.
-This program  also requires the `Sympy` package from PyPI.
-These can be installed by running `python -m pip install python-mnist` and
-`python -m pip install sympy` from the
-command line
+This can be installed by running `python -m pip install python-mnist`
+from the command line
 
 ### Structure
 This structure of the network used in this neural network is:
