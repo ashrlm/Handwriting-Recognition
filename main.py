@@ -83,12 +83,24 @@ class Network():
 
     def backprop(self):
         train_set = random.choice(self.img_sets)
-        weight_bias_changes = []
+        weight_changes = []
+        bias_changes = []
 
         for train in train_set:
             expected = [0] * 10
             expected[train_set[train]] = 1
             self.activate(train)
+
+            weight_changes.append([])
+            bias_changes.append([])
+
+            for layer in self.layers[1::-1]:
+                for expect, neuron in zip(expected, layer.neurons):
+                    if neuron.output < expect:
+                        bias_changes[-1].append(expect - neuron.output)
+                        # TODO: Weight changes
+                    elif neuron.output > expect:
+                        bias_changes[-1].append(neuron.output - expect)
 
             # TODO: Add code here to check weight_bias_changes for gradient descent
 
@@ -135,7 +147,8 @@ def load_dataset(ds_path, training=True):
         return (dataset.load_testing()[0], dataset.test_labels)
 
 def main():
-    pass
+    n=Network('dataset')
+    n.backprop()
 
 if __name__ == "__main__":
     main()
