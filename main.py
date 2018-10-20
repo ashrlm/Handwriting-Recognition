@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import sys
 import math
 import random
 
@@ -224,7 +225,13 @@ def load_dataset(ds_path, training=True):
         return (dataset.load_testing()[0], dataset.test_labels)
 
 def main():
-    network = Network('dataset')
+    dataset = 'dataset'
+    for arg in sys.argv:
+        if '-d' in arg:
+            dataset = sys.argv[sys.argv.index(arg)+1]
+
+    network = Network(dataset)
+
     while True:
         try:
             network.backprop()
