@@ -49,10 +49,14 @@ class Network():
                     new_neuron.inputs.append(new_conn)
                     self.connections.append(new_conn)
 
+
+        self.layers.append(Layer([], True)) #Create output layer
+
         for i in range(10): #Output layer generation
             new_neuron = Neuron([])
             self.neurons.append(new_neuron)
-            for neuron in self.layers[-1].neurons: #Add connection to all neurons from last layer
+            self.layers[-1].neurons.append(new_neuron)
+            for neuron in self.layers[-2].neurons: #Add connection to all neurons from last layer
                 new_conn = Connection(
                     (neuron, new_neuron)
                 )
@@ -83,30 +87,24 @@ class Network():
 
     def backprop(self):
         train_set = random.choice(self.img_sets)
-        weight_changes = []
-        bias_changes = []
 
         for train in train_set:
-            expected = [0] * 10
-            expected[train_set[train]] = 1
             self.activate(train)
+            for layer in self.layers[::-1]:
+                for neuron in layer.neurons:
+                    neuron.expected = 0
+                    if self.neurons.index(neuron) == len(self.neurons) - train_set[train]:
+                        neuron.expected = 1
 
-            weight_changes.append([])
-            bias_changes.append([])
+                    neuron.bias += neuron.expected - neuron.output #Update bias - Averaging later
 
-            for layer in self.layers[1::-1]:
-                for expect, neuron in zip(expected, layer.neurons):
-                    if neuron.output < expect:
-                        bias_changes[-1].append(expect - neuron.output)
-                        # TODO: Weight changes
-                    elif neuron.output > expect:
-                        bias_changes[-1].append(neuron.output - expect)
-
-            # TODO: Add code here to check weight_bias_changes for gradient descent
+        for neuron in self.neurons:
+            neuron.bias /= len(list(train_set.keys())[0]) #Average neuron bias
 
 class Layer():
-    def __init__(self, neurons):
+    def __init__(self, neurons, out=False):
         self.neurons = neurons
+        self.out = out
 
 class Connection():
     def __init__(self, neurons):
@@ -117,6 +115,7 @@ class Neuron():
 
     def __init__(self, inputs, input_neuron=None):
         self.input_neuron = input_neuron
+        self.output = 0
         self.inputs = inputs #List of connection objects
         self.bias = random.uniform(-1, 1) #Generate bias
 
@@ -147,8 +146,7 @@ def load_dataset(ds_path, training=True):
         return (dataset.load_testing()[0], dataset.test_labels)
 
 def main():
-    n=Network('dataset')
-    n.backprop()
+    pass
 
 if __name__ == "__main__":
     main()
