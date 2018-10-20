@@ -7,7 +7,10 @@ from mnist import MNIST #Reading of datasets
 
 class Network():
     def __init__(self, ds, mbs=100, seed=1):
-        self.dataset = load_dataset(ds, False) #Pull dataset, seperate for efficiency
+        self.ds = ds
+        self.seed = seed
+        self.mbs = mbs
+        self.dataset = load_dataset(ds) #Pull dataset, seperate for efficiency
         self.min_batch_size = mbs
         self.img_sets = []
         self.correct = 0
@@ -93,6 +96,17 @@ class Network():
         for train in train_set:
             self.activate(train)
 
+            #Accuracy Scoring
+            self.num_guesses += 1
+            if self.output == train_set[train]:
+                self.correct += 1
+
+            print(
+                "Network Output:", self.output,
+                "Answer:", train_set[train],
+                "Accuracy:",self.correct / self.num_guesses * 100
+                )
+
             for layer in self.layers[::-1]:
                 for neuron in layer.neurons:
                     if not hasattr(neuron, 'expected'):
@@ -130,30 +144,39 @@ class Network():
         for neuron in self.neurons:
             neuron.bias /= len(list(train_set.keys())[0]) #Average neuron bias
 
-    def train(self):
-        #Accuracy Scoring
-        self.num_guesses += 1
-        if self.output == train_set[train]:
-            self.correct += 1
-
-        print(
-            "Network Output:", self.output,
-            "Answer:", train_set[train],
-            "Accuracy:",self.correct / self.num_guesses * 100)
-
-        self.backprop()
-
     def test(self):
+        self.dataset = load_dataset(self.ds, False) #Pull dataset, seperate for efficiency
+        self.img_sets = []
         self.correct = 0
-        self.guesses = 0
-        self.dataset = load_dataset('dataset', False)
+        self.num_guesses = 0
 
-        network.activate()
+        for ds in self.dataset: #Randomly shuffle datasets
+            random.seed(self.seed) #Seed to ensure images and values stay same
+            random.shuffle(ds)
 
-        print(
-            "Network Output:", self.output,
-            "Answer:", train_set[train],
-            "Accuracy:",self.correct / self.num_guesses * 100)
+        curr_set = {} #Generate miniset
+        for img, val in zip(self.dataset[0], self.dataset[1]):
+            if len(curr_set) % self.min_batch_size == 0 and len(curr_set):
+                self.img_sets.append(curr_set) #Add current set to image sets
+                curr_set = {}
+            else:
+                curr_set[tuple(img)] = val
+
+        self.img_sets.append(curr_set) #Add current set as otherwise never added
+
+        while True:
+            img_set = random.choice(self.img_sets)
+            for img in img_set:
+                self.activate(img)
+                self.num_guesses += 1
+                if self.output == img_set[img]:
+                    self.correct += 1
+
+                print(
+                    "Network Output:", self.output,
+                    "Answer:", img_set[img],
+                    "Accuracy:",self.correct / self.num_guesses * 100
+                    )
 
 
 class Layer():
@@ -204,9 +227,12 @@ def main():
     network = Network('dataset')
     while True:
         try:
-            network.train()
+            network.backprop()
         except KeyboardInterrupt:
-            network.test()
+            print('\n\n\n')
+            print("TESTING")
+            print('\n\n\n')
+            network.test() #Loop inside func
 
 if __name__ == "__main__":
     main()
