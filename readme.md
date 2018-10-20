@@ -20,9 +20,11 @@ This structure of the network used in this neural network is:
 
 ### Usage
 The program can be run from the command line or by clicking on it, however
-to specify a custom dataset or to switch it into test mode it must be run from
-the commmand line to allow the usage of flags
+to specify a custom dataset it must be run from the commmand line to allow the
+usage of flags
+
+When the program is ran, it will automatically begin training. To switch it from
+training mode into testing mode, simply press CTRL-C.
 
 ##### Flags
-- -t, --test: Switch into test mode
 - -d \<dataset>, --dataset <dataset>: Specify custom dataset to use
