@@ -92,11 +92,29 @@ class Network():
             self.activate(train)
             for layer in self.layers[::-1]:
                 for neuron in layer.neurons:
-                    neuron.expected = 0
+                    if not neuron.expected:
+                        neuron.expected = 0
+
                     if self.neurons.index(neuron) == len(self.neurons) - train_set[train]:
                         neuron.expected = 1
 
                     neuron.bias += neuron.expected - neuron.output #Update bias - Averaging later
+
+                    if neuron.output > neuron.expected:
+                        for connection in neuron.inputs:
+                            connection.neurons[0].expected = neuron.output - neuron.expected
+                            if connection.weight > 0:
+                                connection.weight -= neuron.output - neuron.expected
+                            else:
+                                connection.weight += neuron.output - neuron.expected
+
+                    elif neuron.output < neuron.expected:
+                        for connection in neuron.inputs:
+                            connection.neurons[0].expected = neuron.expected - neuron.output:
+                            if connection.weight > 0:
+                                connection.weight += neuron.expected - neuron.output
+                            else:
+                                connection.weight -= neuron.expected - neuron.output
 
         for neuron in self.neurons:
             neuron.bias /= len(list(train_set.keys())[0]) #Average neuron bias
