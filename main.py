@@ -68,6 +68,19 @@ class Network():
             for neuron in layer.neurons:
                 neuron.activate()
 
+        # Get neuron with highest fire rate and set that as decision to prove learning
+
+
+        max_neuron_index = -1
+        max_neuron_output = -1
+
+        for i, neuron in enumerate(self.layers[-1].neurons):
+            if neuron.output > max_neuron_output:
+                max_neuron_index = i
+                max_neuron_output = neuron.output
+
+        self.output = max_neuron_index
+
     def backprop(self):
         train_set = random.choice(self.img_sets)
         weight_bias_changes = []
@@ -76,6 +89,7 @@ class Network():
             expected = [0] * 10
             expected[train_set[train]] = 1
             self.activate(train)
+
             # TODO: Add code here to check weight_bias_changes for gradient descent
 
 class Layer():
