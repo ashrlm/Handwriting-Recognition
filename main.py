@@ -10,6 +10,8 @@ class Network():
         self.dataset = load_dataset(ds, False) #Pull dataset, seperate for efficiency
         self.min_batch_size = mbs
         self.img_sets = []
+        self.correct = 0
+        self.num_guesses = 0
 
         for ds in self.dataset: #Randomly shuffle datasets
             random.seed(seed) #Seed to ensure images and values stay same
@@ -90,16 +92,22 @@ class Network():
 
         for train in train_set:
             self.activate(train)
+
             for layer in self.layers[::-1]:
                 for neuron in layer.neurons:
-                    if not neuron.expected:
+                    if not hasattr(neuron, 'expected'):
+                        neuron.expected = 0.5
+
+                    if neuron in self.layers[-1].neurons:
                         neuron.expected = 0
 
                     if self.neurons.index(neuron) == len(self.neurons) - train_set[train]:
                         neuron.expected = 1
 
+                    # Bias update
                     neuron.bias += neuron.expected - neuron.output #Update bias - Averaging later
 
+                    # Connection Update
                     if neuron.output > neuron.expected:
                         for connection in neuron.inputs:
                             connection.neurons[0].expected = neuron.output - neuron.expected
@@ -110,14 +118,43 @@ class Network():
 
                     elif neuron.output < neuron.expected:
                         for connection in neuron.inputs:
-                            connection.neurons[0].expected = neuron.expected - neuron.output:
+                            connection.neurons[0].expected = neuron.expected - neuron.output
                             if connection.weight > 0:
                                 connection.weight += neuron.expected - neuron.output
                             else:
                                 connection.weight -= neuron.expected - neuron.output
 
+                    delattr(neuron, 'expected')
+                    #Clean up expected attr - Never used from earlier layers
+
         for neuron in self.neurons:
             neuron.bias /= len(list(train_set.keys())[0]) #Average neuron bias
+
+    def train(self):
+        #Accuracy Scoring
+        self.num_guesses += 1
+        if self.output == train_set[train]:
+            self.correct += 1
+
+        print(
+            "Network Output:", self.output,
+            "Answer:", train_set[train],
+            "Accuracy:",self.correct / self.num_guesses * 100)
+
+        self.backprop()
+
+    def test(self):
+        self.correct = 0
+        self.guesses = 0
+        self.dataset = load_dataset('dataset', False)
+
+        network.activate()
+
+        print(
+            "Network Output:", self.output,
+            "Answer:", train_set[train],
+            "Accuracy:",self.correct / self.num_guesses * 100)
+
 
 class Layer():
     def __init__(self, neurons, out=False):
@@ -164,7 +201,12 @@ def load_dataset(ds_path, training=True):
         return (dataset.load_testing()[0], dataset.test_labels)
 
 def main():
-    pass
+    network = Network('dataset')
+    while True:
+        try:
+            network.train()
+        except KeyboardInterrupt:
+            network.test()
 
 if __name__ == "__main__":
     main()
