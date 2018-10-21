@@ -6,6 +6,8 @@ import random
 
 from mnist import MNIST #Reading of datasets
 
+# BUG: Network activation - Neuron output grouping and network stuck on 1 output when testing
+
 class Network():
     def __init__(self, ds, mbs=100, seed=1):
         self.ds = ds
@@ -102,10 +104,16 @@ class Network():
             if self.output == train_set[train]:
                 self.correct += 1
 
+            outputs = []
+            for neuron in self.layers[-1].neurons:
+                outputs.append(str(round(neuron.output, 4)) + ('0' * (6 -len(str(round(neuron.output, 4))))))
+
             print(
+                "Network Outputs:", outputs,
                 "Network Output:", self.output,
                 "Answer:", train_set[train],
-                "Accuracy:",self.correct / self.num_guesses * 100
+                "Accuracy:",self.correct / self.num_guesses * 100,
+                "(", self.correct,'/',self.num_guesses,')'
                 )
 
             for layer in self.layers[::-1]:
@@ -144,6 +152,7 @@ class Network():
 
         for neuron in self.neurons:
             neuron.bias /= len(list(train_set.keys())[0]) #Average neuron bias
+            neuron.bias = sigmoid(neuron.bias)
 
     def test(self):
         self.dataset = load_dataset(self.ds, False) #Pull dataset, seperate for efficiency
@@ -173,10 +182,16 @@ class Network():
                 if self.output == img_set[img]:
                     self.correct += 1
 
+                outputs = []
+                for neuron in self.layers[-1].neurons:
+                    outputs.append(str(round(neuron.output, 4)) + ('0' * (6 -len(str(round(neuron.output, 4))))))
+
                 print(
+                    "Network Outputs:", outputs,
                     "Network Output:", self.output,
                     "Answer:", img_set[img],
-                    "Accuracy:",self.correct / self.num_guesses * 100
+                    "Accuracy:",self.correct / self.num_guesses * 100,
+                    "(", self.correct,'/',self.num_guesses,')'
                     )
 
 
@@ -207,7 +222,7 @@ class Neuron():
 
 def sigmoid(x):
     try:
-        return 1/(1+(math.e ** -x))
+        return 1/(1+(math.e ** -(x)))
     except OverflowError:
         if x > 0:
             return 1
