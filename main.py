@@ -6,8 +6,6 @@ import random
 
 from mnist import MNIST #Reading of datasets
 
-# BUG: Network activation - Neuron output grouping and network stuck on 1 output when testing
-
 class Network():
     def __init__(self, ds, mbs=100, seed=1):
         self.ds = ds
@@ -92,6 +90,13 @@ class Network():
                 max_neuron_output = neuron.output
 
         self.output = max_neuron_index
+
+    def cost(self, expected):
+        cost = 0
+        for neuron, expected in zip(self.layers[-1].neurons, expected):
+            cost += (neuron.output - expected) ** 2
+
+        self.cost = cost
 
     def backprop(self):
         train_set = random.choice(self.img_sets)
