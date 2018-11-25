@@ -78,8 +78,7 @@ class Network():
             for neuron in layer.neurons:
                 neuron.activate()
 
-        # Get neuron with highest fire rate and set that as decision to prove learning
-
+        # Get neuron with highest fire rate and set that as decision
 
         max_neuron_index = -1
         max_neuron_output = -1
@@ -98,13 +97,13 @@ class Network():
 
         self.cost = cost
 
-    def backprop(self):
+    def train(self): #Activate and Show network outputs
         train_set = random.choice(self.img_sets)
 
         for train in train_set:
             self.activate(train)
 
-            #Accuracy Scoring
+            #Accuracy Scoring - All for debugging and Proof of Learning
             self.num_guesses += 1
             if self.output == train_set[train]:
                 self.correct += 1
@@ -120,6 +119,8 @@ class Network():
                 "Accuracy:",self.correct / self.num_guesses * 100,
                 "(", self.correct,'/',self.num_guesses,')'
                 )
+
+    def backprop(self): #TODO: Update to actually use calculus
 
             for layer in self.layers[::-1]:
                 for neuron in layer.neurons:
@@ -183,6 +184,8 @@ class Network():
             img_set = random.choice(self.img_sets)
             for img in img_set:
                 self.activate(img)
+
+                #All below for scoring
                 self.num_guesses += 1
                 if self.output == img_set[img]:
                     self.correct += 1
@@ -255,6 +258,7 @@ def main():
 
     while True:
         try:
+            network.train()
             network.backprop()
         except KeyboardInterrupt:
             print('\n\n\n')
