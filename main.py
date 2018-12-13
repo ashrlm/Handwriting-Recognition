@@ -120,41 +120,43 @@ class Network():
                 "(", self.correct,'/',self.num_guesses,')'
                 )
 
-    def backprop(self): #TODO: Update to actually use calculus
+            self.backprop(train_set, train)
 
-            for layer in self.layers[::-1]:
-                for neuron in layer.neurons:
-                    if not hasattr(neuron, 'expected'):
-                        neuron.expected = 0.5
+    def backprop(self, train_set, train): #TODO: Update to actually use calculus
 
-                    if neuron in self.layers[-1].neurons:
-                        neuron.expected = 0
+        for layer in self.layers[::-1]:
+            for neuron in layer.neurons:
+                if not hasattr(neuron, 'expected'):
+                    neuron.expected = 0.5
 
-                    if self.neurons.index(neuron) == len(self.neurons) - train_set[train]:
-                        neuron.expected = 1
+                if neuron in self.layers[-1].neurons:
+                    neuron.expected = 0
 
-                    # Bias update
-                    neuron.bias += neuron.expected - neuron.output #Update bias - Averaging later
+                if self.neurons.index(neuron) == len(self.neurons) - train_set[train]:
+                    neuron.expected = 1
 
-                    # Connection Update
-                    if neuron.output > neuron.expected:
-                        for connection in neuron.inputs:
-                            connection.neurons[0].expected = neuron.output - neuron.expected
-                            if connection.weight > 0:
-                                connection.weight -= neuron.output - neuron.expected
-                            else:
-                                connection.weight += neuron.output - neuron.expected
+                # Bias update
+                neuron.bias += neuron.expected - neuron.output #Update bias - Averaging later
 
-                    elif neuron.output < neuron.expected:
-                        for connection in neuron.inputs:
-                            connection.neurons[0].expected = neuron.expected - neuron.output
-                            if connection.weight > 0:
-                                connection.weight += neuron.expected - neuron.output
-                            else:
-                                connection.weight -= neuron.expected - neuron.output
+                # Connection Update
+                if neuron.output > neuron.expected:
+                    for connection in neuron.inputs:
+                        connection.neurons[0].expected = neuron.output - neuron.expected
+                        if connection.weight > 0:
+                            connection.weight -= neuron.output - neuron.expected
+                        else:
+                            connection.weight += neuron.output - neuron.expected
 
-                    delattr(neuron, 'expected')
-                    #Clean up expected attr - Never used from earlier layers
+                elif neuron.output < neuron.expected:
+                    for connection in neuron.inputs:
+                        connection.neurons[0].expected = neuron.expected - neuron.output
+                        if connection.weight > 0:
+                            connection.weight += neuron.expected - neuron.output
+                        else:
+                            connection.weight -= neuron.expected - neuron.output
+
+                delattr(neuron, 'expected')
+                #Clean up expected attr - Never used from earlier layers
 
         for neuron in self.neurons:
             neuron.bias /= len(list(train_set.keys())[0]) #Average neuron bias
@@ -259,7 +261,6 @@ def main():
     while True:
         try:
             network.train()
-            network.backprop()
         except KeyboardInterrupt:
             print('\n\n\n')
             print("TESTING")
