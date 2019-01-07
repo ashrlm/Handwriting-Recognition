@@ -2,9 +2,16 @@
 
 import sys
 import math
+import json
 import random
+import argparse
 
-from mnist import MNIST #Reading of datasets
+try:
+    from mnist import MNIST #Reading of datasets
+    mnist_format = True
+except ImportError:
+    print("MNIST could not be imported. Depending on the format of the dataset, this may not be a problem")
+    mnist_format = False
 
 class Network():
     def __init__(self, ds, mbs=100, seed=1):
@@ -241,11 +248,18 @@ def sigmoid(x):
 
 def load_dataset(ds_path, training=True):
     # NOTE: Returns (Dataset images, Dataset labels)
-    dataset = MNIST(ds_path)
-    if training:
-        return (dataset.load_training()[0], dataset.train_labels)
+    if mnist_format:
+        dataset = MNIST(ds_path)
+        if training:
+            return (dataset.load_training()[0], dataset.train_labels)
+        else:
+            return (dataset.load_testing()[0], dataset.test_labels)
     else:
-        return (dataset.load_testing()[0], dataset.test_labels)
+        dataset = json.loads(ds_path)
+        ds = {}
+        #TODO: Some magic here to read it
+        print(dataset)
+        return (list(ds.keys()), list(ds.values()))
 
 def main():
     dataset = 'dataset'
