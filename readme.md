@@ -28,3 +28,7 @@ training mode into testing mode, simply press CTRL-C.
 
 ##### Flags
 - -d \<dataset>, --dataset <dataset>: Specify custom dataset to use
+
+### Datasets
+The data fed into this network should either be from the MNIST dataset or in JSON format.
+For examples of what these should look like, check the dataset folder of this repository.
