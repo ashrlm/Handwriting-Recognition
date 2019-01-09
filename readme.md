@@ -28,6 +28,7 @@ training mode into testing mode, simply press CTRL-C.
 
 ##### Flags
 - -d \<dataset>, --dataset <dataset>: Specify custom dataset to use
+- -j: Alert the program that the data is in JSON format. This is required if the data is JSON.
 
 ### Datasets
 The data fed into this network should either be from the MNIST dataset or in JSON format.
