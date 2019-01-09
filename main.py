@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import ast
 import sys
 import math
 import json
@@ -255,11 +256,13 @@ def load_dataset(ds_path, training=True):
         else:
             return (dataset.load_testing()[0], dataset.test_labels)
     else:
-        dataset = json.loads(ds_path)
-        ds = {}
-        #TODO: Some magic here to read it
-        print(dataset)
-        return (list(ds.keys()), list(ds.values()))
+        if training:
+            dataset = json.loads(ds_path + "/training.json")
+        else:
+            dataset = json.loads(ds_path + "/testing.json")
+        imgs = [ast.literal_eval(img) for img in list(dataset.keys())]
+        labels = list(dataset.values())
+        return (imgs, labels)
 
 def main():
     dataset = 'dataset'
