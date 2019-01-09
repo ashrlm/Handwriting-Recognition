@@ -262,6 +262,7 @@ def load_dataset(ds_path, training=True):
         return (list(ds.keys()), list(ds.values()))
 
 def main():
+    #TODO: Refactor when I get my laptop back (emumerate, .lower)
     dataset = 'dataset'
     for arg in sys.argv:
         if '-d' in arg:
@@ -269,6 +270,9 @@ def main():
                 dataset = sys.argv[sys.argv.index(arg)+1]
             except:
                 raise IndexError("Dataset must be supplied after", arg, "flag")
+
+        if "-j" in arg:
+            mnist_format = False
 
     network = Network(dataset)
 
