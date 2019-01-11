@@ -9,12 +9,13 @@ import argparse
 
 try:
     from mnist import MNIST #Reading of datasets
-    mnist_format = True
 except ImportError:
     print("MNIST could not be imported. Depending on the format of the dataset, this may not be a problem")
-    mnist_format = False
 
 class Network():
+
+    mnist_format = True
+
     def __init__(self, ds, mbs=100, seed=1):
         self.ds = ds
         self.seed = seed
@@ -249,7 +250,7 @@ def sigmoid(x):
 
 def load_dataset(ds_path, training=True):
     # NOTE: Returns (Dataset images, Dataset labels)
-    if mnist_format:
+    if Network.mnist_format:
         dataset = MNIST(ds_path)
         if training:
             return (dataset.load_training()[0], dataset.train_labels)
@@ -274,12 +275,12 @@ def main():
                 raise IndexError("Dataset must be supplied after", arg, "flag")
 
         if "-j" in arg.lower():
-            mnist_format = False
+            Network.mnist_format = False
 
     try:
         network = Network(dataset)
-    except: #TODO: What error does this throw for fnf:
-        raise AttributeError("Dataset not found")
+    except FileNotFoundError:
+        raise FileNotFoundError("Dataset not found")
 
     while True:
         try:
