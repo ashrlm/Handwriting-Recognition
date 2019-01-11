@@ -258,10 +258,13 @@ def load_dataset(ds_path, training=True):
             return (dataset.load_testing()[0], dataset.test_labels)
     else:
         if training:
-            dataset = json.loads(ds_path + "/training.json")
+            with open(ds_path + "/training.json") as training_json:
+                dataset = json.load(training_json)
         else:
-            dataset = json.loads(ds_path + "/testing.json")
-        imgs = [ast.literal_eval(img) for img in list(dataset.keys())]
+            with open(ds_path + "/training.json") as testing_json:
+                dataset = json.load(testing_json)
+    
+        imgs = [ast.literal_eval(img) for img in list(dataset.keys())] #TODO: If at all possible, make this load quicker
         labels = list(dataset.values())
         return (imgs, labels)
 
