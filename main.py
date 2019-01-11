@@ -276,7 +276,10 @@ def main():
         if "-j" in arg.lower():
             mnist_format = False
 
-    network = Network(dataset)
+    try:
+        network = Network(dataset)
+    except: #TODO: What error does this throw for fnf:
+        raise AttributeError("Dataset not found")
 
     while True:
         try:
