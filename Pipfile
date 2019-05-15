@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 python-mnist = "*"
 sympy = "*"
+numpy = "*"
 
 [dev-packages]
 
