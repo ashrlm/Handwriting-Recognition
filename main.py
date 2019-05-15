@@ -20,6 +20,17 @@ class Network:
         self.w_h1_h2 = np.random.randn(10, 10)
         self.w_h2_o  = np.random.randn(10, 10)
 
+        #Load datasets
+        raw_datasets  = load_dataset(ds_path, True, mnist_format)
+        sets, labels  = raw_datasets[0], raw_datasets[1]
+        self.batches = [] #[{item1: label1, item_2: label_2}, {item_101: label_101}]
+        for i in range(0, floor(len(raw_datasets / batch_size))):
+            batch = {}
+            for i in range(batch_size)
+                batch[raw_datasets[i]] = label[i]
+            self.batches.append(batch)
+
+
 def sigmoid(x):
     try:
         return 1/(1+(math.e ** -(x)))
@@ -29,8 +40,8 @@ def sigmoid(x):
         else:
             return 0
 
-def load_dataset(ds_path, training=True):
-    if Network.mnist_format:
+def load_dataset(ds_path, training=True, mnist_format=True):
+    if mnist_format:
         dataset = MNIST(ds_path)
         if training:
             return (dataset.load_training()[0], dataset.train_labels)
