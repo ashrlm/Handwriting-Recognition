@@ -13,6 +13,13 @@ try:
 except ImportError:
     print("MNIST could not be imported. Depending on the format of the dataset, this may not be a problem")
 
+class Network:
+    def __init__(self, ds_path, batch_size=100, mnist_format=True):
+        #Initialise weight matrices
+        self.w_i_h1  = np.random.randn(784, 10)
+        self.w_h1_h2 = np.random.randn(10, 10)
+        self.w_h2_o  = np.random.randn(10, 10)
+
 def sigmoid(x):
     try:
         return 1/(1+(math.e ** -(x)))
