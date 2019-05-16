@@ -15,10 +15,12 @@ except ImportError:
 
 class Network:
     def __init__(self, ds_path, batch_size=100, mnist_format=True):
-        #Initialise weight matrices
-        self.w_i_h1  = np.random.randn(784, 10)
-        self.w_h1_h2 = np.random.randn(10, 10)
-        self.w_h2_o  = np.random.randn(10, 10)
+        #Initialise weights
+        self.weights = [
+            np.random.randn(784, 10), #Input -> h1
+            np.random.randn(10, 10),  #h1    -> h2
+            np.random.randn(10, 10)   #h2    -> Output
+        ]
 
         #Load datasets
         raw_datasets  = load_dataset(ds_path, True, mnist_format)
@@ -29,7 +31,6 @@ class Network:
             for i in range(batch_size)
                 batch[raw_datasets[i]] = label[i]
             self.batches.append(batch)
-
 
 def sigmoid(x):
     try:
