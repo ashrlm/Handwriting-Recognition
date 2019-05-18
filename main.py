@@ -28,10 +28,10 @@ class Network:
         raw_datasets  = load_dataset(ds_path, True, mnist_format)
         sets, labels  = raw_datasets[0], raw_datasets[1]
         self.batches = [] #[{item1: label1, item_2: label_2}, {item_101: label_101}]
-        for i in range(0, floor(len(raw_datasets / batch_size))):
+        for i in range(0, math.floor(len(sets) / batch_size)):
             batch = {}
             for i in range(batch_size):
-                batch[raw_datasets[i]] = label[i]
+                batch[tuple(sets[i])] = labels[i]
             self.batches.append(batch)
 
 def sigmoid(x):
