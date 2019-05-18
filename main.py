@@ -22,13 +22,15 @@ class Network:
             np.random.randn(10, 10)   #h2    -> Output
         ]
 
+        self.biases = np.random.uniform(-1, 1, 30)
+
         #Load datasets
         raw_datasets  = load_dataset(ds_path, True, mnist_format)
         sets, labels  = raw_datasets[0], raw_datasets[1]
         self.batches = [] #[{item1: label1, item_2: label_2}, {item_101: label_101}]
         for i in range(0, floor(len(raw_datasets / batch_size))):
             batch = {}
-            for i in range(batch_size)
+            for i in range(batch_size):
                 batch[raw_datasets[i]] = label[i]
             self.batches.append(batch)
 
@@ -66,8 +68,7 @@ def save_weights(path, weights):
             np.savetxt(f, line, fmt='%.2f')
 
 def main():
-    mat = np.matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-    save_weights('weights.txt', mat)
+    pass
 
 if __name__ == "__main__":
     main()
