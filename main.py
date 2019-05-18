@@ -9,7 +9,7 @@ import argparse
 import numpy as np
 
 try:
-    from mnist import MNIST #Reading of datasets
+    from mnist.loader import MNIST #Reading of datasets
 except ImportError:
     print("MNIST could not be imported. Depending on the format of the dataset, this may not be a problem")
 
