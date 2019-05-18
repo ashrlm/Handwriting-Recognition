@@ -30,9 +30,14 @@ class Network:
         self.batches = [] #[{item1: label1, item_2: label_2}, {item_101: label_101}]
         for i in range(0, math.floor(len(sets) / batch_size)):
             batch = {}
-            for i in range(batch_size):
-                batch[tuple(sets[i])] = labels[i]
+            for j in range(batch_size):
+                batch[tuple(sets[j])] = labels[j]
             self.batches.append(batch)
+
+    def activate(self, sample):
+        activations_prior = [] #Store last layer activations
+        for neuron, data in zip(range(784), sample): #Activate input layer
+            pass
 
 def sigmoid(x):
     try:
@@ -68,7 +73,7 @@ def save_weights(path, weights):
             np.savetxt(f, line, fmt='%.2f')
 
 def main():
-    pass
+    Network("./dataset")
 
 if __name__ == "__main__":
     main()
