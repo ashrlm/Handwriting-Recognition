@@ -2,6 +2,7 @@
 
 import ast
 import math
+import sys
 import json
 import numpy as np
 
@@ -84,8 +85,30 @@ def save_weights(path, weights):
         for line in weights:
             np.savetxt(f, line, fmt='%.2f')
 
+def parse():
+    data = ["./dataset", True, None, 100, False] #[ds_path, mnist_format, weights, batch_size, testing]
+
+    if "-d" in sys.argv:
+        data[0] = sys.argv[sys.argv.index("-d")+1]
+
+    if "-j" in sys.argv:
+        data[1] = False
+
+    if "-w" in sys.argv:
+        data[2] = sys.argv[sys.argv.index("-w")+1]
+
+    if "-b" in sys.argv:
+        data[3] = sys.argv[sys.argv.index("-b")+1]
+
+    if "-t" in sys.argv:
+        data[4] = True
+
+    return data
+
 def main():
-    Network("./dataset")
+    args = parse()
+
+    network = Network(*args[:-1])
 
 if __name__ == "__main__":
     main()
