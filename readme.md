@@ -19,16 +19,15 @@ This structure of the network used in this neural network is:
 - 10 Output Neurons
 
 ### Usage
-The program can be run from the command line or by clicking on it, however
-to specify a custom dataset it must be run from the commmand line to allow the
-usage of flags
-
-When the program is ran, it will automatically begin training. To switch it from
+When the program is started, it will automatically begin training (Unless -t is included) To switch it from
 training mode into testing mode, simply press CTRL-C.
 
 ##### Flags
-- -d \<dataset>, --dataset <dataset>: Specify custom dataset to use
+- -d <dataset>: Specify custom dataset to use
 - -j: Alert the program that the data is in JSON format. This is required if the data is JSON.
+- -w <weights>: Specify custom, pregenerated weights to use
+- -b <batch size>: Specify custom batch size to use (Default 100)
+- -t: Skip training and immediately begin testing
 
 ### Datasets
 The data fed into this network should either be from the MNIST dataset or in JSON format.
