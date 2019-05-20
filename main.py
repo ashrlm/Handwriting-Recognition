@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 
 import ast
-import sys
 import math
 import json
-import random
-import argparse
 import numpy as np
 
 try:
@@ -49,7 +46,7 @@ class Network:
             activations_prior = list(activations_curr)
 
         return activations_prior
-        
+
 def sigmoid(x):
     try:
         return 1/(1+(math.e ** -(x)))
