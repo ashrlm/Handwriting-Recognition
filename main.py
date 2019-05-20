@@ -39,6 +39,17 @@ class Network:
         for i, data in zip(range(784), sample): #Activate input layer
             activations_prior[i] = data
 
+        for i in range(3):
+            activations_curr = []
+            for neuron in range(10):
+                activation = 0
+                for weight in self.weights[i]:
+                    activation += (activations_prior[neuron] * weight)
+                activations_curr.append(sigmoid(activation))
+            activations_prior = list(activations_curr)
+
+        return activations_prior
+        
 def sigmoid(x):
     try:
         return 1/(1+(math.e ** -(x)))
