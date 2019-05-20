@@ -36,8 +36,8 @@ class Network:
 
     def activate(self, sample):
         activations_prior = [] #Store last layer activations
-        for neuron, data in zip(range(784), sample): #Activate input layer
-            pass
+        for i, data in zip(range(784), sample): #Activate input layer
+            activations_prior[i] = data
 
 def sigmoid(x):
     try:
