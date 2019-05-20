@@ -28,12 +28,12 @@ class Network:
 
         #Load datasets
         raw_datasets  = load_dataset(ds_path, True, mnist_format)
-        sets, labels  = raw_datasets[0], raw_datasets[1]
+        self.sets, self.labels  = raw_datasets[0], raw_datasets[1]
         self.batches = [] #[{item1: label1, item_2: label_2}, {item_101: label_101}]
-        for i in range(0, math.floor(len(sets) / batch_size)):
+        for i in range(0, math.floor(len(self.sets) / batch_size)):
             batch = {}
             for j in range(batch_size):
-                batch[tuple(sets[j])] = labels[j]
+                batch[tuple(self.sets[j])] = self.labels[j]
             self.batches.append(batch)
 
     def activate(self, sample):
@@ -51,6 +51,10 @@ class Network:
             activations_prior = list(activations_curr)
 
         return activations_prior
+
+    def test(self):
+        while True:
+            sample =
 
 def sigmoid(x):
     try:
