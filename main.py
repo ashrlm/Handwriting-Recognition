@@ -65,11 +65,20 @@ class Network:
             test, label = self.sets[sample_index], self.labels[sample_index]
             final_activations = self.activate(test)
             res_index =  final_activations.index(max(final_activations))
+
             total_attempts += 1
             if res_index == label:
                 correct_attempts += 1
+
+            for i in range(10):
+                if res_index == i:
+                    error += (1-final_activations[i])**2
+                else:
+                    error += (-final_activations[i])**2
+            error /= 10
+
             accuracy = 100 * (correct_attempts / total_attempts)
-            print("Output:", res_index, "Correct answer:", label, "Accuracy", accuracy)
+            print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10], "LL Error:", str(error)[:10])
 
 def sigmoid(x):
     try:
