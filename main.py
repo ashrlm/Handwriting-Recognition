@@ -41,7 +41,7 @@ class Network:
         for i, data in zip(range(784), sample): #Activate input layer
             activations_prior[i] = data
 
-        for i in range(3): #SOMETHING VERY WRONG WITH THIS
+        for i in range(3):
             activations_curr = []
             for neuron in range(10):
                 activation = 0
@@ -55,8 +55,21 @@ class Network:
         return activations_prior
 
     def test(self):
+        #Misc info for opertator
+        total_attempts   = 0
+        correct_attempts = 0
+        error            = 0
+
         while True:
-            sample =
+            sample_index = np.random.randint(len(self.sets))
+            test, label = self.sets[sample_index], self.labels[sample_index]
+            final_activations = self.activate(test)
+            res_index =  final_activations.index(max(final_activations))
+            total_attempts += 1
+            if res_index == label:
+                correct_attempts += 1
+            accuracy = 100 * (correct_attempts / total_attempts)
+            print("Output:", res_index, "Correct answer:", label, "Accuracy", accuracy)
 
 def sigmoid(x):
     try:
@@ -115,6 +128,7 @@ def main():
     args = parse()
 
     network = Network(*args[:-1])
+    network.test()
 
 if __name__ == "__main__":
     main()
