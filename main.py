@@ -125,9 +125,7 @@ def parse():
     return data
 
 def main():
-    args = parse()
-
-    network = Network(*args[:-1])
+    network = Network(*parse()[:-1])
     network.test()
 
 if __name__ == "__main__":
