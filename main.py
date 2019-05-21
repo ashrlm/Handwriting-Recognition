@@ -108,10 +108,12 @@ def load_dataset(ds_path, training=True, mnist_format=True):
         labels = list(dataset.values())
         return (imgs, labels)
 
-def save_weights(path, weights):
+def save_data(path, data):
     with open(path, 'w') as f:
-        for line in weights:
+        for line in data:
             np.savetxt(f, line, fmt='%.2f')
+
+#TODO: Load weights
 
 def parse():
     data = ["./dataset", True, None, 100, False] #[ds_path, mnist_format, weights, batch_size, testing]
@@ -139,7 +141,9 @@ def main():
         network.test()
     except KeyboardInterrupt:
         if input("Save weights? [Y/n]").lower() != "n":
-            save_weights('./weights.txt', network.weights)
+            save_data('./weights.txt', network.weights)
+        if input("Save biases? [Y/n]").lower() != "n":
+            save_data('./biases.txt', network.biases)
 
 if __name__ == "__main__":
     main()
