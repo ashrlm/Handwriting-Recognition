@@ -19,7 +19,7 @@ class Network:
             self.weights = weights
         else:
             self.weights = [
-                np.random.randn(784, 10), #Input -> h1
+                np.random.randn(10, 784), #Input -> h1
                 np.random.randn(10, 10),  #h1    -> h2
                 np.random.randn(10, 10)   #h2    -> Output
             ]
@@ -41,14 +41,15 @@ class Network:
         for i, data in zip(range(784), sample): #Activate input layer
             activations_prior[i] = data
 
-        for i in range(3):
+        for i in range(3): #SOMETHING VERY WRONG WITH THIS
             activations_curr = []
             for neuron in range(10):
                 activation = 0
-                for weight in self.weights[i][neuron]:
-                    activation += (activations_prior[neuron] * weight)
+                for old_activ, weight in zip(activations_prior, self.weights[i][neuron]):
+                    activation += (old_activ * weight) + self.biases[(10*i) + neuron]
 
                 activations_curr.append(sigmoid(activation))
+
             activations_prior = activations_curr
 
         return activations_prior
