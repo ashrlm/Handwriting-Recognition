@@ -37,7 +37,7 @@ class Network:
             self.batches.append(batch)
 
     def activate(self, sample):
-        activations_prior = [] #Store last layer activations
+        activations_prior = [0] * 784 #Store previous layer activations
         for i, data in zip(range(784), sample): #Activate input layer
             activations_prior[i] = data
 
@@ -45,10 +45,11 @@ class Network:
             activations_curr = []
             for neuron in range(10):
                 activation = 0
-                for weight in self.weights[i]:
+                for weight in self.weights[i][neuron]:
                     activation += (activations_prior[neuron] * weight)
+
                 activations_curr.append(sigmoid(activation))
-            activations_prior = list(activations_curr)
+            activations_prior = activations_curr
 
         return activations_prior
 
