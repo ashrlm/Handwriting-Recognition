@@ -135,7 +135,11 @@ def parse():
 
 def main():
     network = Network(*parse()[:-1])
-    network.test()
+    try:
+        network.test()
+    except KeyboardInterrupt:
+        if input("Save weights? [Y/n]").lower() != "n":
+            save_weights('./weights.txt', network.weights)
 
 if __name__ == "__main__":
     main()
