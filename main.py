@@ -110,12 +110,7 @@ def load_dataset(ds_path, training=True, mnist_format=True):
         imgs = [ast.literal_eval(img) for img in list(dataset.keys())]
         labels = list(dataset.values())
         return (imgs, labels)
-
-def save_data(path, data):
-    with open(path, 'w') as f:
-        for line in data:
-            np.savetxt(f, line, fmt='%.2f')
-
+        
 #TODO: Load weights
 
 def parse():
