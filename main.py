@@ -133,7 +133,7 @@ def parse():
         data[4] = int(sys.argv[sys.argv.index("-s")+1])
 
     if "-a" in sys.argv:
-        data[5] = abs(int(sys.argv[sys.argv.index("-a")+1]))
+        data[5] = abs(float(sys.argv[sys.argv.index("-a")+1]))
 
     if "-t" in sys.argv:
         data[5] = True
