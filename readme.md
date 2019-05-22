@@ -26,7 +26,8 @@ training mode into testing mode, simply press CTRL-C.
 - -d <dataset>: Specify custom dataset to use
 - -j: Alert the program that the data is in JSON format. This is required if the data is JSON.
 - -w <weights>: Specify custom, pregenerated weights to use
-- -b <batch size>: Specify custom batch size to use (Default 100)
+- -b <biases>: Specify custom, pregenerated weights to use
+- -s <batch size>: Specify custom batch size to use (Default 100)
 - -t: Skip training and immediately begin testing
 
 ### Datasets

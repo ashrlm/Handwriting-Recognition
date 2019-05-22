@@ -13,7 +13,7 @@ except ImportError:
 
 class Network:
 
-    def __init__(self, ds_path, mnist_format, weights, batch_size):
+    def __init__(self, ds_path, mnist_format, weights, biases, batch_size):
         #Initialise weights
         if weights:
             self.weights = weights
@@ -24,7 +24,10 @@ class Network:
                 np.random.randn(10, 10)   #h2    -> Output
             ]
 
-        self.biases = np.random.uniform(-1, 1, 30)
+        if biases:
+            self.biases = biases
+        else:
+            self.biases = np.random.uniform(-1, 1, 30)
 
         #Load datasets
         raw_datasets  = load_dataset(ds_path, True, mnist_format)
@@ -116,7 +119,7 @@ def save_data(path, data):
 #TODO: Load weights
 
 def parse():
-    data = ["./dataset", True, None, 100, False] #[ds_path, mnist_format, weights, batch_size, testing]
+    data = ["./dataset", True, None, None, 100, False] #[ds_path, mnist_format, weights, biases, batch_size, testing]
 
     if "-d" in sys.argv:
         data[0] = sys.argv[sys.argv.index("-d")+1]
@@ -128,10 +131,13 @@ def parse():
         data[2] = sys.argv[sys.argv.index("-w")+1]
 
     if "-b" in sys.argv:
-        data[3] = sys.argv[sys.argv.index("-b")+1]
+        data[3] = sys.argv.sys.argv.index("-b")+1]
+
+    if "-s" in sys.argv:
+        data[4] = sys.argv[sys.argv.index("-b")+1]
 
     if "-t" in sys.argv:
-        data[4] = True
+        data[5] = True
 
     return data
 
