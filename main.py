@@ -65,7 +65,7 @@ class Network:
         return activations_prior
 
     def test(self):
-        #Misc info for opertator
+        #Misc info for user
         total_attempts   = 0
         correct_attempts = 0
         error            = 0
@@ -91,13 +91,9 @@ class Network:
             print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10], "LL Error:", str(error*100)[:10]+"%")
 
 def sigmoid(x):
-    try:
-        return 1/(1+(math.e ** -(x)))
-    except OverflowError:
-        if x > 0:
-            return 1
-        else:
-            return 0
+    if x < 0:
+        return 1 - 1 / (1 + math.exp(x))
+    return 1 / (1 + math.exp(-x))
 
 def load_dataset(ds_path, training=True, mnist_format=True):
     if mnist_format:
@@ -117,8 +113,6 @@ def load_dataset(ds_path, training=True, mnist_format=True):
         imgs = [ast.literal_eval(img) for img in list(dataset.keys())]
         labels = list(dataset.values())
         return (imgs, labels)
-
-#TODO: Load weights
 
 def parse():
     data = ["./dataset", True, None, None, 100, .01, False] #[ds_path, mnist_format, weights, biases, batch_size, learning rate, testing]
@@ -151,9 +145,9 @@ def main():
     try:
         network.test()
     except KeyboardInterrupt:
-        if input("Save weights? [Y/n] ").lower() != "n":
+        if input("Save weights? [Y/n] ").lower()[0] != "n":
             np.savez('./weights', *network.weights)
-        if input("Save biases? [Y/n] ").lower() != "n":
+        if input("Save biases? [Y/n] ").lower()[0] != "n":
             np.save('./biases.npy', [network.biases]) #Wrap in new array to prevent 0d arrays
 
 if __name__ == "__main__":
