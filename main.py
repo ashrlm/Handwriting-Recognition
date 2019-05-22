@@ -16,7 +16,12 @@ class Network:
     def __init__(self, ds_path, mnist_format, weights, biases, batch_size):
         #Initialise weights
         if weights:
-            self.weights = np.load(weights)
+            npz_weights = np.load(weights)
+            self.weights = [
+                npz_weights[npz_weights.files[0]],
+                npz_weights[npz_weights.files[1]],
+                npz_weights[npz_weights.files[2]]
+            ]
         else:
             self.weights = [
                 np.random.randn(10, 784), #Input -> h1
@@ -25,7 +30,7 @@ class Network:
             ]
 
         if biases:
-            self.biases = np.load(biases)
+            self.biases = np.load(biases)[0]
         else:
             self.biases = np.random.uniform(-1, 1, 30)
 
@@ -110,7 +115,7 @@ def load_dataset(ds_path, training=True, mnist_format=True):
         imgs = [ast.literal_eval(img) for img in list(dataset.keys())]
         labels = list(dataset.values())
         return (imgs, labels)
-        
+
 #TODO: Load weights
 
 def parse():
