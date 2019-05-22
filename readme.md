@@ -28,6 +28,7 @@ training mode into testing mode, simply press CTRL-C.
 - -w <weights>: Specify custom, pregenerated weights to use
 - -b <biases>: Specify custom, pregenerated weights to use
 - -s <batch size>: Specify custom batch size to use (Default 100)
+- -a <learning rate>: Specifify learning rate (> 0, Default 0.01)
 - -t: Skip training and immediately begin testing
 
 ### Datasets

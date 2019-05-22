@@ -13,7 +13,7 @@ except ImportError:
 
 class Network:
 
-    def __init__(self, ds_path, mnist_format, weights, biases, batch_size):
+    def __init__(self, ds_path, mnist_format, weights, biases, batch_size, learning_rate):
         #Initialise weights
         if weights:
             npz_weights = np.load(weights)
@@ -33,6 +33,8 @@ class Network:
             self.biases = np.load(biases)[0]
         else:
             self.biases = np.random.uniform(-1, 1, 30)
+
+        self.learning_rate = learning_rate
 
         #Load datasets
         raw_datasets  = load_dataset(ds_path, True, mnist_format)
@@ -119,7 +121,7 @@ def load_dataset(ds_path, training=True, mnist_format=True):
 #TODO: Load weights
 
 def parse():
-    data = ["./dataset", True, None, None, 100, False] #[ds_path, mnist_format, weights, biases, batch_size, testing]
+    data = ["./dataset", True, None, None, 100, .01, False] #[ds_path, mnist_format, weights, biases, batch_size, learning rate, testing]
 
     if "-d" in sys.argv:
         data[0] = sys.argv[sys.argv.index("-d")+1]
@@ -135,6 +137,9 @@ def parse():
 
     if "-s" in sys.argv:
         data[4] = int(sys.argv[sys.argv.index("-s")+1])
+
+    if "-a" in sys.argv:
+        data[5] = abs(int(sys.argv[sys.argv.index("-a")+1]))
 
     if "-t" in sys.argv:
         data[5] = True
