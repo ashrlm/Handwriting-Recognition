@@ -143,7 +143,7 @@ def main():
         if input("Save weights? [Y/n]").lower() != "n":
             save_data('./weights.txt', network.weights)
         if input("Save biases? [Y/n]").lower() != "n":
-            save_data('./biases.txt', network.biases)
+            save_data('./biases.txt', [network.biases]) #Wrap in new array to prevent 0d arrays
 
 if __name__ == "__main__":
     main()
