@@ -86,7 +86,7 @@ class Network:
             error /= 10
 
             accuracy = 100 * (correct_attempts / total_attempts)
-            print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10], "LL Error:", str(error)[:10])
+            print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10], "LL Error:", str(error*100)[:10]+"%")
 
 def sigmoid(x):
     try:
@@ -146,9 +146,9 @@ def main():
     try:
         network.test()
     except KeyboardInterrupt:
-        if input("Save weights? [Y/n]").lower() != "n":
+        if input("Save weights? [Y/n] ").lower() != "n":
             np.savez('./weights', *network.weights)
-        if input("Save biases? [Y/n]").lower() != "n":
+        if input("Save biases? [Y/n] ").lower() != "n":
             np.save('./biases.npy', [network.biases]) #Wrap in new array to prevent 0d arrays
 
 if __name__ == "__main__":
