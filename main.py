@@ -16,7 +16,7 @@ class Network:
     def __init__(self, ds_path, mnist_format, weights, biases, batch_size):
         #Initialise weights
         if weights:
-            self.weights = weights
+            self.weights = np.load(weights)
         else:
             self.weights = [
                 np.random.randn(10, 784), #Input -> h1
@@ -25,7 +25,7 @@ class Network:
             ]
 
         if biases:
-            self.biases = biases
+            self.biases = np.load(biases)
         else:
             self.biases = np.random.uniform(-1, 1, 30)
 
@@ -131,7 +131,7 @@ def parse():
         data[2] = sys.argv[sys.argv.index("-w")+1]
 
     if "-b" in sys.argv:
-        data[3] = sys.argv.sys.argv.index("-b")+1]
+        data[3] = sys.argv[sys.argv.index("-b")+1]
 
     if "-s" in sys.argv:
         data[4] = sys.argv[sys.argv.index("-b")+1]
@@ -147,9 +147,9 @@ def main():
         network.test()
     except KeyboardInterrupt:
         if input("Save weights? [Y/n]").lower() != "n":
-            save_data('./weights.txt', network.weights)
+            np.savez('./weights', *network.weights)
         if input("Save biases? [Y/n]").lower() != "n":
-            save_data('./biases.txt', [network.biases]) #Wrap in new array to prevent 0d arrays
+            np.save('./biases.npy', [network.biases]) #Wrap in new array to prevent 0d arrays
 
 if __name__ == "__main__":
     main()
