@@ -19,8 +19,8 @@ This structure of the network used in this neural network is:
 - 10 Output Neurons
 
 ### Usage
-When the program is started, it will automatically begin training (Unless -t is included) To switch it from
-training mode into testing mode, simply press CTRL-C.
+When the program is started, it will automatically begin training (Unless -t is included) To switch
+between testing and training, simply press 't'.
 
 ##### Flags
 - -d <dataset>: Specify custom dataset to use
@@ -30,6 +30,10 @@ training mode into testing mode, simply press CTRL-C.
 - -s <batch size>: Specify custom batch size to use (Default 100)
 - -a <learning rate>: Specifify learning rate (> 0, Default 0.01)
 - -t: Skip training and immediately begin testing
+
+##### Mid-Usage Keys
+- t: Switch between testing and training
+- d: Toggle visibility of outputs (Disable for quicker learning, enable to see what's happening)
 
 ### Datasets
 The data fed into this network should either be from the MNIST dataset or in JSON format.
