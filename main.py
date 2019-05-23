@@ -15,7 +15,7 @@ except ImportError:
 
 class Network:
 
-    def __init__(self, ds_path, mnist_format, weights, biases, batch_size, learning_rate):
+    def __init__(self, ds_path, mnist_format, weights, biases, batch_size, learning_rate, testing):
         #Initialise weights
         if weights:
             npz_weights = np.load(weights)
@@ -55,6 +55,8 @@ class Network:
         self.hookmanager.start()
         self.prev_ascii = None
         self.shown = True
+        self.testing = testing
+        self.running = True
 
     def activate(self, sample):
         activations_prior = [0] * 784 #Store previous layer activations
@@ -75,9 +77,17 @@ class Network:
         return activations_prior
 
     def kbevent(self, event):
+        if not self.running:
+            return
         if event.Ascii == 100:
             self.shown = not self.shown
+        elif event.Ascii == 116:
+            print("Training:", self.testing)
+            self.testing = not self.testing
         self.prev_ascii = event.Ascii
+
+    def train(self):
+        pass
 
     def test(self):
         #Misc info for user
@@ -85,7 +95,7 @@ class Network:
         correct_attempts = 0
         error            = 0
 
-        while True:
+        while self.testing and self.running:
             sample_index = np.random.randint(len(self.sets))
             test, label = self.sets[sample_index], self.labels[sample_index]
             final_activations = self.activate(test)
@@ -106,6 +116,13 @@ class Network:
                 error /= 10
 
                 print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10]+"0"*(10-len(str(accuracy)[:10])), "LL Error:", str(error*100)[:10]+"%")
+
+    def run(self):
+        while True:
+            if not self.testing:
+                self.train()
+            else:
+                self.test()
 
 def sigmoid(x):
     if x < 0:
@@ -158,10 +175,11 @@ def parse():
     return data
 
 def main():
-    network = Network(*parse()[:-1])
+    network = Network(*parse())
     try:
-        network.test()
+        network.run()
     except KeyboardInterrupt:
+        network.running = False
         if (input("Save weights? [Y/n] ")+" ").lower()[0] != "n":
             np.savez('./weights', *network.weights)
         if (input("Save biases? [Y/n] ")+" ").lower()[0] != "n":
