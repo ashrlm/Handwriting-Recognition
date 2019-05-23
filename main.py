@@ -4,9 +4,10 @@ import ast
 import math
 import sys
 import json
+import threading
 
 import numpy as np
-import pyxhook
+import pynput
 
 try:
     from mnist.loader import MNIST #Reading of datasets
@@ -49,11 +50,15 @@ class Network:
             self.batches.append(batch)
 
         #Setup hooks
-        self.hookmanager = pyxhook.HookManager()
-        self.hookmanager.KeyDown = self.kbevent
-        self.hookmanager.HookKeyboard()
-        self.hookmanager.start()
-        self.prev_ascii = None
+        def kb_start():
+            with pynput.keyboard.Listener(on_press = self.kb_press, on_release = self.kb_release) as listener:
+                listener.join()
+
+        self.kb_thread = threading.Thread(target=kb_start)
+        self.kb_thread.daemon = True
+        self.kb_thread.start()
+
+        self.prev_key = None
         self.shown = True
         self.testing = testing
         self.running = True
@@ -76,15 +81,18 @@ class Network:
 
         return activations_prior
 
-    def kbevent(self, event):
+    def kb_press(self, key):
+        pass
+
+    def kb_release(self, key):
         if not self.running:
             return
-        if event.Ascii == 100:
+        if key == pynput.keyboard.KeyCode.from_char('d'):
             self.shown = not self.shown
-        elif event.Ascii == 116:
+        elif key == pynput.keyboard.KeyCode.from_char('t'):
             print("Training:", self.testing)
             self.testing = not self.testing
-        self.prev_ascii = event.Ascii
+        self.prev_key = str(key)
 
     def train(self):
         pass
@@ -118,7 +126,7 @@ class Network:
                 print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10]+"0"*(10-len(str(accuracy)[:10])), "LL Error:", str(error*100)[:10]+"%")
 
     def run(self):
-        while True:
+        while self.running:
             if not self.testing:
                 self.train()
             else:
@@ -184,8 +192,6 @@ def main():
             np.savez('./weights', *network.weights)
         if (input("Save biases? [Y/n] ")+" ").lower()[0] != "n":
             np.save('./biases.npy', [network.biases]) #Wrap in new array to prevent 0d arrays
-
-        network.hookmanager.cancel()
 
 if __name__ == "__main__":
     main()
