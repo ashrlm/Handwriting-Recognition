@@ -7,7 +7,7 @@ name = "pypi"
 python-mnist = "*"
 sympy = "*"
 numpy = "*"
-pyxhook = "*"
+pynput = "*"
 
 [dev-packages]
 
