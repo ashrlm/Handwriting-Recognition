@@ -49,10 +49,10 @@ class Network:
             self.batches.append(batch)
 
         #Setup hooks
-        hookmanager = pyxhook.HookManager()
-        hookmanager.KeyDown = self.kbevent
-        hookmanager.HookKeyboard()
-        hookmanager.start()
+        self.hookmanager = pyxhook.HookManager()
+        self.hookmanager.KeyDown = self.kbevent
+        self.hookmanager.HookKeyboard()
+        self.hookmanager.start()
         self.prev_ascii = None
         self.shown = True
 
@@ -167,7 +167,7 @@ def main():
         if input("Save biases? [Y/n] ").lower()[0] != "n":
             np.save('./biases.npy', [network.biases]) #Wrap in new array to prevent 0d arrays
 
-        network.HookManager.cancel()
+        network.hookmanager.cancel()
 
 if __name__ == "__main__":
     main()
