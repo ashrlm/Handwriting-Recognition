@@ -4,7 +4,9 @@ import ast
 import math
 import sys
 import json
+
 import numpy as np
+import pyxhook
 
 try:
     from mnist.loader import MNIST #Reading of datasets
@@ -46,6 +48,14 @@ class Network:
                 batch[tuple(self.sets[j])] = self.labels[j]
             self.batches.append(batch)
 
+        #Setup hooks
+        hookmanager = pyxhook.HookManager()
+        hookmanager.KeyDown = self.kbevent
+        hookmanager.HookKeyboard()
+        hookmanager.start()
+        self.prev_ascii = None
+        self.shown = True
+
     def activate(self, sample):
         activations_prior = [0] * 784 #Store previous layer activations
         for i, data in zip(range(784), sample): #Activate input layer
@@ -64,6 +74,11 @@ class Network:
 
         return activations_prior
 
+    def kbevent(self, event):
+        if event.Ascii == 100:
+            self.shown = not self.shown
+        self.prev_ascii = event.Ascii
+
     def test(self):
         #Misc info for user
         total_attempts   = 0
@@ -80,15 +95,17 @@ class Network:
             if res_index == label:
                 correct_attempts += 1
 
-            for i in range(10):
-                if res_index == i:
-                    error += (1-final_activations[i])**2
-                else:
-                    error += (-final_activations[i])**2
-            error /= 10
-
             accuracy = 100 * (correct_attempts / total_attempts)
-            print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10], "LL Error:", str(error*100)[:10]+"%")
+
+            if self.shown:
+                for i in range(10):
+                    if res_index == i:
+                        error += (1-final_activations[i])**2
+                    else:
+                        error += (-final_activations[i])**2
+                error /= 10
+
+                print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10], "LL Error:", str(error*100)[:10]+"%")
 
 def sigmoid(x):
     if x < 0:
@@ -149,6 +166,8 @@ def main():
             np.savez('./weights', *network.weights)
         if input("Save biases? [Y/n] ").lower()[0] != "n":
             np.save('./biases.npy', [network.biases]) #Wrap in new array to prevent 0d arrays
+
+        network.HookManager.cancel()
 
 if __name__ == "__main__":
     main()
