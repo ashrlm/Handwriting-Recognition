@@ -105,7 +105,7 @@ class Network:
                         error += (-final_activations[i])**2
                 error /= 10
 
-                print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10], "LL Error:", str(error*100)[:10]+"%")
+                print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10]+"0"*(10-len(str(accuracy)[:10])), "LL Error:", str(error*100)[:10]+"%")
 
 def sigmoid(x):
     if x < 0:
@@ -162,9 +162,9 @@ def main():
     try:
         network.test()
     except KeyboardInterrupt:
-        if input("Save weights? [Y/n] ").lower()[0] != "n":
+        if (input("Save weights? [Y/n] ")+" ").lower()[0] != "n":
             np.savez('./weights', *network.weights)
-        if input("Save biases? [Y/n] ").lower()[0] != "n":
+        if (input("Save biases? [Y/n] ")+" ").lower()[0] != "n":
             np.save('./biases.npy', [network.biases]) #Wrap in new array to prevent 0d arrays
 
         network.hookmanager.cancel()
