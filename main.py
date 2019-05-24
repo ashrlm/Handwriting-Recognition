@@ -126,6 +126,7 @@ class Network:
                 print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10]+"0"*(10-len(str(accuracy)[:10])), "LL Error:", str(error*100)[:10]+"%")
 
     def run(self):
+        print("Training: True")
         while self.running:
             if not self.testing:
                 self.train()
