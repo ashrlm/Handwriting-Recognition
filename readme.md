@@ -7,9 +7,9 @@ training and testing
 
 
 ### Dependencies
-This program requires the `python-mnist` package from PyPI.
-This can be installed by running `python -m pip install python-mnist`
-from the command line
+This dependencies for this program are all contained in ./Pipfile. To install it, just run
+'pipenv sync'. (Note that this does require pipenv to be installed, which can be done with
+'pip install pipenv')
 
 ### Structure
 This structure of the network used in this neural network is:
