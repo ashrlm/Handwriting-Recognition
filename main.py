@@ -72,14 +72,14 @@ class Network:
             activations_curr = []
             for neuron in range(10):
                 activation = 0
-                for old_activ, weight in zip(activations_prior, self.weights[i][neuron]):
+                for old_activ, weight in zip(activs[-1], self.weights[i][neuron]):
                     activation += (old_activ * weight) + self.biases[(10*i) + neuron]
 
-                activations_curr.append(sigmoid(activation))
+                activations_curr.append(activation)
 
             activs.append(activations_curr)
 
-        return activations_prior[1:]
+        return activs[1:]
 
     def kb_press(self, key):
         pass
@@ -106,7 +106,7 @@ class Network:
         while self.testing and self.running:
             sample_index = np.random.randint(len(self.sets))
             test, label = self.sets[sample_index], self.labels[sample_index]
-            final_activations = self.activate(test)
+            final_activations = list(map(sigmoid, self.activate(test)[-1]))
             res_index =  final_activations.index(max(final_activations))
 
             total_attempts += 1
