@@ -95,7 +95,8 @@ class Network:
         self.prev_key = str(key)
 
     def train(self):
-        pass
+        def delta_w(activs, expectations, layer, neuron_l, neuron_l_prev):
+            return (sigmoid(activs[neuron_l_prev]))*(sigmoid(activs[neuron_l]) * (1-sigmoid(activs[neuron_l])))*(2*(sigmoid(activs[neuron_l]) - expectations[neuron_l]))
 
     def test(self):
         #Misc info for user
