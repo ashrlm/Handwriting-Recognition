@@ -64,9 +64,9 @@ class Network:
         self.running = True
 
     def activate(self, sample):
-        activations_prior = [0] * 784 #Store previous layer activations
+        activs = [[0] * 784]
         for i, data in zip(range(784), sample): #Activate input layer
-            activations_prior[i] = data
+            activs[0][i] = data
 
         for i in range(3):
             activations_curr = []
@@ -77,9 +77,9 @@ class Network:
 
                 activations_curr.append(sigmoid(activation))
 
-            activations_prior = activations_curr
+            activs.append(activations_curr)
 
-        return activations_prior
+        return activations_prior[1:]
 
     def kb_press(self, key):
         pass
