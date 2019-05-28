@@ -5,7 +5,6 @@ name = "pypi"
 
 [packages]
 python-mnist = "*"
-sympy = "*"
 numpy = "*"
 pynput = "*"
 
