@@ -106,6 +106,24 @@ class Network:
         def delta_b(activs, expectations, layer, neuron_l):
             return (sigmoid(activs[layer][neuron_l])*(1-sigmoid(activs[layer][neuron_l]))) * (2*(sigmoid(activs[layer][neuron_l]) - expectations[neuron_l]))
 
+        batch = self.batches[np.random.randint(0, len(self.batches))]
+        expected = [label for label in list(batch.values)]
+        for item, label in zip(batch, expected):
+            activs = list(map(sigmoid, self.activate(item)))
+            for layer in activs[::-1]:
+                for neuron in range(len(layer)):
+                    delta_common = (sigmoid(activs[layer][neuron]) * (1-sigmoid(activs[layer][neuron]))) * (2*(sigmoid(activs[layer][neuron]) - label)) #d(sigmoid)/d(w(l)(jk)) * (2(sigmoid(a(L)(jk))) - y(j)
+                    delta_w = () #TODO
+                    delta_b = () #TODO
+                    try:
+                        for neuron_prev in range(len(layer)-1):
+                            pass #TODO: Update expected
+                    except: #Handle first hidden layer
+                        pass
+
+        #TODO: delta_a - Hard part: Using weight matrix to find number of neurons in layer
+        #TODO: Note repetitons - Potential for memoisation? (d(sigmoid)/dz, 2(ajL-yj))
+
     def test(self):
         #Misc info for user
         total_attempts   = 0
