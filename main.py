@@ -99,20 +99,15 @@ class Network:
         #NOTES
         #Activs = [[L1_Activs], [L2_Activs], [L3_Activs], [L4_ACTIVS]]
         #Expectations = [L(N) Expectations]
-        
+
         batch = self.batches[np.random.randint(0, len(self.batches))]
-        expected = [label for label in list(batch.values)]
+        expected = [label for label in list(batch.values())]
         for item, label in zip(batch, expected):
-            activs = list(map(sigmoid, self.activate(item)))
+            activs = [[sigmoid(a_l) for a_l in activation] for activation in self.activate(item)]
             for layer in activs[::-1]:
                 for neuron in range(len(layer)):
                     delta_b = (sigmoid(activs[layer][neuron]) * (1-sigmoid(activs[layer][neuron]))) * (2*(sigmoid(activs[layer][neuron]) - label)) #d(sigmoid)/d(w(l)(jk)) * (2(sigmoid(a(L)(jk))) - y(j)
                     delta_w = sigmoid(activs[layer-1][neuron_l_prev]) * delta_b #TODO
-                    try:
-                        for neuron_prev in range(len(layer)-1):
-                            pass #TODO: Update expected
-                    except: #Handle first hidden layer
-                        pass
 
         #TODO: delta_a - Hard part: Using weight matrix to find number of neurons in layer
         #TODO: Note repetitons - Potential for memoisation? (d(sigmoid)/dz, 2(ajL-yj))
@@ -126,7 +121,7 @@ class Network:
         while self.testing and self.running:
             sample_index = np.random.randint(len(self.sets))
             test, label = self.sets[sample_index], self.labels[sample_index]
-            final_activations = list(map(sigmoid, self.activate(test)[-1]))
+            final_activations = [[sigmoid(a_l) for a_l in activation] for activation in self.activate(item)]
             res_index =  final_activations.index(max(final_activations))
 
             total_attempts += 1
