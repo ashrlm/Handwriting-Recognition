@@ -98,10 +98,7 @@ class Network:
 
         #NOTES
         #Activs = [[L1_Activs], [L2_Activs], [L3_Activs], [L4_ACTIVS]]
-        #Expectations = [LN Expectations]
-
-        def delta_w(activs, expectations, layer, neuron_l, neuron_l_prev):
-            return (sigmoid(activs[layer-1][neuron_l_prev])) * (sigmoid(activs[layer][neuron_l])*(1-sigmoid(activs[layer][neuron_l]))) * (2*(sigmoid(activs[layer][neuron_l]) - expectations[neuron_l]))
+        #Expectations = [L(N) Expectations]
 
         def delta_b(activs, expectations, layer, neuron_l):
             return (sigmoid(activs[layer][neuron_l])*(1-sigmoid(activs[layer][neuron_l]))) * (2*(sigmoid(activs[layer][neuron_l]) - expectations[neuron_l]))
@@ -113,7 +110,7 @@ class Network:
             for layer in activs[::-1]:
                 for neuron in range(len(layer)):
                     delta_common = (sigmoid(activs[layer][neuron]) * (1-sigmoid(activs[layer][neuron]))) * (2*(sigmoid(activs[layer][neuron]) - label)) #d(sigmoid)/d(w(l)(jk)) * (2(sigmoid(a(L)(jk))) - y(j)
-                    delta_w = () #TODO
+                    delta_w = sigmoid(activs[layer-1][neuron_l_prev]) * delta_common #TODO
                     delta_b = () #TODO
                     try:
                         for neuron_prev in range(len(layer)-1):
