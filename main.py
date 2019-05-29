@@ -103,7 +103,7 @@ class Network:
         batch = self.batches[np.random.randint(0, len(self.batches))]
         expected = [label for label in list(batch.values())]
         for item, label in zip(batch, expected):
-            activs = [[sigmoid(a_l) for a_l in activation] for activation in self.activate(item)]
+            activs = self.activate(item)
             for layer in activs[::-1]:
                 for neuron in range(len(layer)):
                     delta_b = (sigmoid(activs[layer][neuron]) * (1-sigmoid(activs[layer][neuron]))) * (2*(sigmoid(activs[layer][neuron]) - label)) #d(sigmoid)/d(w(l)(jk)) * (2(sigmoid(a(L)(jk))) - y(j)
