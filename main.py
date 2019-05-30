@@ -109,13 +109,13 @@ class Network:
             for i, layer in enumerate(activs[::-1]):
                 delta_w_sample = []
                 delta_b_sample = []
-                for neuron in range(len(layer)):
-                    delta_b = sigmoid(activs[i][neuron]) * (1-sigmoid(activs[i][neuron])) * (2*(sigmoid(activs[i][neuron]) - label)) #d(sigmoid)/d(w(l)(jk)) * (2(sigmoid(a(L)(jk))) - y(j)
+                for neuron in layer:
+                    delta_b = sigmoid(neuron) * ((sigmoid(neuron)*(1-sigmoid(neuron))) * (2*(sigmoid(neuron) - label) #d(sigmoid)/d(w(L)(jk)) * (2(sigmoid(a(l)(jk))) - y(j))
                     delta_b_sample.append(delta_b)
+                    #TODO: Compute delta_a
                     try:
                         for neuron_j in range(len(activs[::-1][i+1])):
                             delta_w_sample.append(sigmoid(activs[i-1][neuron_j]) * delta_b)
-                        #TODO: Compute delta_a
                     except IndexError: #Handle last layer
                         pass
             delta_ws.append(delta_w_sample)
