@@ -19,7 +19,7 @@ This structure of the network used in this neural network is:
 - 10 Output Neurons
 
 ### Usage
-When the program is started, it will automatically begin training (Unless -t is included) To switch
+When the program is started, it will automatically begin training (Unless -t is included). To switch
 between testing and training, simply press 't'.
 
 ##### Flags
@@ -28,7 +28,7 @@ between testing and training, simply press 't'.
 - -w <weights>: Specify custom, pregenerated weights to use
 - -b <biases>: Specify custom, pregenerated weights to use
 - -s <batch size>: Specify custom batch size to use (Default 100)
-- -a <learning rate>: Specifify learning rate (> 0, Default 0.01)
+- -a <learning rate>: Specify learning rate (>0, Default 0.01)
 - -t: Skip training and immediately begin testing
 
 ##### Mid-Usage Keys
