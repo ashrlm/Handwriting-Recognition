@@ -120,7 +120,6 @@ class Network:
                         pass
             delta_ws.append(delta_w_sample)
             delta_bs.append(delta_b_sample)
-            print(1)
 
         #TODO: delta_a - Hard part: Using weight matrix to find number of neurons in layer
 
@@ -133,7 +132,7 @@ class Network:
         while self.testing and self.running:
             sample_index = np.random.randint(len(self.sets))
             test, label = self.sets[sample_index], self.labels[sample_index]
-            final_activations = [[sigmoid(a_l) for a_l in activation] for activation in self.activate(item)]
+            final_activations = [[sigmoid(a_l) for a_l in activation] for activation in self.activate(test)][-1]
             res_index =  final_activations.index(max(final_activations))
 
             total_attempts += 1
