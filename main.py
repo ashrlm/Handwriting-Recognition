@@ -102,15 +102,22 @@ class Network:
 
         batch = self.batches[np.random.randint(0, len(self.batches))]
         expected = [label for label in list(batch.values())]
+        delta_ws = [] #List of list of all weight derivates over all training examples
+        delta_bs = []
         for item, label in zip(batch, expected):
             activs = self.activate(item)
-            for layer in activs[::-1]:
+            for i, layer in enumerate(activs[::-1]):
+                delta_w_sample = []
+                delta_b_sample = []
                 for neuron in range(len(layer)):
-                    delta_b = (sigmoid(activs[layer][neuron]) * (1-sigmoid(activs[layer][neuron]))) * (2*(sigmoid(activs[layer][neuron]) - label)) #d(sigmoid)/d(w(l)(jk)) * (2(sigmoid(a(L)(jk))) - y(j)
-                    delta_w = sigmoid(activs[layer-1][neuron_l_prev]) * delta_b #TODO
+                    delta_b_sample.append((sigmoid(activs[i][neuron]) * (1-sigmoid(activs[i][neuron]))) * (2*(sigmoid(activs[i][neuron]) - label))) #d(sigmoid)/d(w(l)(jk)) * (2(sigmoid(a(L)(jk))) - y(j)
+                    for neuron_j in range(len(activs[::-1][i+1])):
+                        delta_w_sample.append(sigmoid(activs[i-1][neuron_j]) * delta_b)
+                    #TODO: Compute delta_a
+            delta_ws.append(delta_w_sample)
+            delta_bs.append(delta_b_sample)
 
         #TODO: delta_a - Hard part: Using weight matrix to find number of neurons in layer
-        #TODO: Note repetitons - Potential for memoisation? (d(sigmoid)/dz, 2(ajL-yj))
 
     def test(self):
         #Misc info for user
