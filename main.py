@@ -110,12 +110,17 @@ class Network:
                 delta_w_sample = []
                 delta_b_sample = []
                 for neuron in range(len(layer)):
-                    delta_b_sample.append((sigmoid(activs[i][neuron]) * (1-sigmoid(activs[i][neuron]))) * (2*(sigmoid(activs[i][neuron]) - label))) #d(sigmoid)/d(w(l)(jk)) * (2(sigmoid(a(L)(jk))) - y(j)
-                    for neuron_j in range(len(activs[::-1][i+1])):
-                        delta_w_sample.append(sigmoid(activs[i-1][neuron_j]) * delta_b)
-                    #TODO: Compute delta_a
+                    delta_b = sigmoid(activs[i][neuron]) * (1-sigmoid(activs[i][neuron])) * (2*(sigmoid(activs[i][neuron]) - label)) #d(sigmoid)/d(w(l)(jk)) * (2(sigmoid(a(L)(jk))) - y(j)
+                    delta_b_sample.append(delta_b)
+                    try:
+                        for neuron_j in range(len(activs[::-1][i+1])):
+                            delta_w_sample.append(sigmoid(activs[i-1][neuron_j]) * delta_b)
+                        #TODO: Compute delta_a
+                    except IndexError: #Handle last layer
+                        pass
             delta_ws.append(delta_w_sample)
             delta_bs.append(delta_b_sample)
+            print(1)
 
         #TODO: delta_a - Hard part: Using weight matrix to find number of neurons in layer
 
