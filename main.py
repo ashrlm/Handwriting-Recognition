@@ -109,7 +109,7 @@ class Network:
             for i, layer in enumerate(activs[::-1]):
                 delta_w_sample = []
                 delta_b_sample = []
-                for neuron in layer:
+                for j, neuron in enumerate(layer):
                     delta_b = sigmoid(neuron) * ((sigmoid(neuron)*(1-sigmoid(neuron))) * (2*(sigmoid(neuron) - label) #d(sigmoid)/d(w(L)(jk)) * (2(sigmoid(a(l)(jk))) - y(j))
                     delta_b_sample.append(delta_b)
                     delta_a = 0
@@ -119,7 +119,7 @@ class Network:
                             #Compute delta(neuron)(L-1) here
                             activs[layer-2] #Check not on first hidden layer
                             delta_a += (self.weights[::-1][i][neuron_j]) * (sigmoid(activs[i][neuron_j])*(1-sigmoid(activs[i][neuron_j]))) * (2*(sigmoid(activs[i][neuron_j]) - expected[neuron_j]))
-
+                        expected[j] += -self.learning_rate * delta_a
                     except IndexError: #Handle last layer
                         pass
             delta_ws.append(delta_w_sample)
