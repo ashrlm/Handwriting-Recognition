@@ -111,6 +111,18 @@ class Network:
         delta_bs = []
         for item, label in zip(batch, expected):
             activs = self.activate(item)
+
+            #Misc info for user
+            self.train_attempts += 1
+            if res_index == label:
+                self.train_correct += 1
+
+            accuracy = 100 * (self.train_correct / self.train_attempts)
+
+            if self.shown:
+                error = sum([(1-final_activations[i])**2 if res_index==i else final_activations[i]**2 for i in range(len(final_activations))]) / len(final_activations)
+                print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10]+"0"*(10-len(str(accuracy)[:10])), "LL Error:", str(error*100)[:10]+"%")
+
             for i, layer in enumerate(activs[::-1]):
                 delta_w_sample = []
                 delta_b_sample = []
@@ -131,35 +143,35 @@ class Network:
             delta_bs.append(delta_b_sample)
 
     def test(self):
+        sample_index = np.random.randint(len(self.sets))
+        test, label = self.sets[sample_index], self.labels[sample_index]
+        final_activations = [[sigmoid(a_l) for a_l in activation] for activation in self.activate(test)][-1]
+        res_index =  final_activations.index(max(final_activations))
+
         #Misc info for user
-        total_attempts   = 0
-        correct_attempts = 0
-        error            = 0
+        self.test_attempts += 1
+        if res_index == label:
+            self.test_correct += 1
 
-        while self.testing and self.running:
-            sample_index = np.random.randint(len(self.sets))
-            test, label = self.sets[sample_index], self.labels[sample_index]
-            final_activations = [[sigmoid(a_l) for a_l in activation] for activation in self.activate(test)][-1]
-            res_index =  final_activations.index(max(final_activations))
+        accuracy = 100 * (self.test_correct / self.test_attempts)
 
-            total_attempts += 1
-            if res_index == label:
-                correct_attempts += 1
-
-            accuracy = 100 * (correct_attempts / total_attempts)
-
-            if self.shown:
-
-                error = sum([(1-final_activations[i])**2 if res_index==i else final_activations[i]**2 for i in range(len(final_activations))]) / len(final_activations)
-                print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10]+"0"*(10-len(str(accuracy)[:10])), "LL Error:", str(error*100)[:10]+"%")
+        if self.shown:
+            error = sum([(1-final_activations[i])**2 if res_index==i else final_activations[i]**2 for i in range(len(final_activations))]) / len(final_activations)
+            print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10]+"0"*(10-len(str(accuracy)[:10])), "LL Error:", str(error*100)[:10]+"%")
 
     def run(self):
         print("Training: True")
+
+        self.train_attempts = 0
+        self.train_correct = 0
+        self.test_attempts = 0
+        self.test_correct = 0
+
         while self.running:
-            if not self.testing:
-                self.train()
-            else:
+            if self.testing:
                 self.test()
+            else:
+                self.train()
 
 def sigmoid(x):
     if x < 0:
