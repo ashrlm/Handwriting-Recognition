@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+#TODO: Check ds loading
+#TODO: Update weights
+#TODO: Update biases
+#TODO: Log info on training
+
 import ast
 import math
 import sys
@@ -125,8 +130,6 @@ class Network:
             delta_ws.append(delta_w_sample)
             delta_bs.append(delta_b_sample)
 
-        #TODO: delta_a - Hard part: Using weight matrix to find number of neurons in layer
-
     def test(self):
         #Misc info for user
         total_attempts   = 0
@@ -146,13 +149,8 @@ class Network:
             accuracy = 100 * (correct_attempts / total_attempts)
 
             if self.shown:
-                for i in range(10):
-                    if res_index == i:
-                        error += (1-final_activations[i])**2
-                    else:
-                        error += (-final_activations[i])**2
-                error /= 10
 
+                error = sum([(1-final_activations[i])**2 if res_index==i else final_activations[i]**2 for i in range(len(final_activations))]) / len(final_activations)
                 print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10]+"0"*(10-len(str(accuracy)[:10])), "LL Error:", str(error*100)[:10]+"%")
 
     def run(self):
