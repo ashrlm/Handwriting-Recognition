@@ -142,6 +142,10 @@ class Network:
             delta_ws.append(delta_w_sample)
             delta_bs.append(delta_b_sample)
 
+            for i in range(len(delta_bs[0])):
+                self.biases[::-1][i] += (-self.learning_rate * ([biases[i] for biases in delta_bs] / len(delta_bs)))
+
+
     def test(self):
         sample_index = np.random.randint(len(self.sets))
         test, label = self.sets[sample_index], self.labels[sample_index]
