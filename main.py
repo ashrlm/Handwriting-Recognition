@@ -144,11 +144,12 @@ class Network:
                             expected[neuron_j] += int(-self.learning_rate * delta_a)
                     except IndexError: #Handle last layer
                         pass
+
             delta_ws.append(delta_w_sample)
             delta_bs.append(delta_b_sample)
 
-            for i in range(len(delta_bs[0])):
-                self.biases[::-1][i] += (-self.learning_rate * (sum([biases[i] for biases in delta_bs]) / len(delta_bs)))
+        for i in range(len(delta_bs[0])):
+            self.biases[::-1][i] += (-self.learning_rate * (sum([biases[i] for biases in delta_bs]) / len(delta_bs)))
 
 
     def test(self):
