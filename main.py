@@ -125,7 +125,7 @@ class Network:
             accuracy = 100 * (self.train_correct / self.train_attempts)
 
             if self.shown:
-                error = sum([(1-sigmoid(activs[-1][i]))**2 if res_index==i else sigmoid(activs[-1][i])**2 for i in range(len(activs[-1]))]) / len(activs[-1])
+                error = sum([(1-sigmoid(activ))**2 if res_index == i else sigmoid(activ)**2 for activ in activs[-1]]) / len(activs[-1])
                 print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10]+"0"*(10-len(str(accuracy)[:10])), "LL Error:", str(error*100)[:10]+"%")
 
             for i, layer in enumerate(activs[::-1]):
@@ -149,7 +149,7 @@ class Network:
             delta_bs.append(delta_b_sample)
 
         for i in range(len(delta_bs[0])):
-            self.biases[::-1][i] += (-self.learning_rate * (sum([biases[i] for biases in delta_bs]) / len(delta_bs)))
+            self.biases[::-1][i] += -self.learning_rate * (sum([biases[i] for biases in delta_bs]) / len(delta_bs))
 
 
     def test(self):
@@ -166,7 +166,7 @@ class Network:
         accuracy = 100 * (self.test_correct / self.test_attempts)
 
         if self.shown:
-            error = sum([(1-final_activations[i])**2 if res_index==i else final_activations[i]**2 for i in range(len(final_activations))]) / len(final_activations)
+            error = sum([(1-activ)**2 if res_index == i else activ**2 for activ in final_activations]) / len(final_activations)
             print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10]+"0"*(10-len(str(accuracy)[:10])), "LL Error:", str(error*100)[:10]+"%")
 
     def run(self):
