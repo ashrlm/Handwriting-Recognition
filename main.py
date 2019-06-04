@@ -113,7 +113,7 @@ class Network:
         delta_bs = []
         for item, label in zip(batch, expected):
             activs = self.activate(item)
-            res_index = activs.index(max(activs[-1]))
+            res_index = activs[-1].index(max(activs[-1]))
 
             #BUG: Label list??
 
@@ -125,7 +125,7 @@ class Network:
             accuracy = 100 * (self.train_correct / self.train_attempts)
 
             if self.shown:
-                error = sum([(1-sigmoid(activs[i]))**2 if res_index==i else sigmoid(activs[i])**2 for i in range(len(activs[-1]))]) / len(activs[-1])
+                error = sum([(1-sigmoid(activs[-1][i]))**2 if res_index==i else sigmoid(activs[-1][i])**2 for i in range(len(activs[-1]))]) / len(activs[-1])
                 print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10]+"0"*(10-len(str(accuracy)[:10])), "LL Error:", str(error*100)[:10]+"%")
 
             for i, layer in enumerate(activs[::-1]):
@@ -140,7 +140,7 @@ class Network:
                             delta_w_sample.append(sigmoid(activs[j-1][neuron_j]) * delta_b)
                             #Compute delta(neuron)(L-1) here
                             activs[j-2] #Check not on first hidden layer
-                            delta_a += (self.weights[::-1][j][neuron_j]) * (sigmoid(activs[j][neuron_j])*(1-sigmoid(activs[j][neuron_j]))) * (2*(sigmoid(activs[j][neuron_j]) - expected[neuron_j]))
+                            delta_a += (self.weights[::-1][i][j][neuron_j]) * (sigmoid(activs[j][neuron_j])*(1-sigmoid(activs[j][neuron_j]))) * (2*(sigmoid(activs[j][neuron_j]) - expected[neuron_j]))
                             expected[neuron_j] += int(-self.learning_rate * delta_a)
                     except IndexError: #Handle last layer
                         pass
