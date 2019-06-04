@@ -2,8 +2,6 @@
 
 #TODO: Check ds loading
 #TODO: Update weights
-#TODO: Update biases
-#TODO: Log info on training
 
 import ast
 import math
@@ -44,7 +42,7 @@ class Network:
 
         self.learning_rate = learning_rate
 
-        #Load datasets
+        #Load training datasets
         raw_datasets  = load_dataset(ds_path, True, mnist_format)
         self.sets, self.labels  = raw_datasets[0], raw_datasets[1]
         self.batches = [] #[{item1: label1, item_2: label_2}, {item_101: label_101}]
@@ -53,6 +51,10 @@ class Network:
             for j in range(batch_size):
                 batch[tuple(self.sets[j])] = self.labels[j]
             self.batches.append(batch)
+
+        raw_datasets_test = load_dataset(ds_path, False, mnist_format)
+        self.test_sets, self.test_labels = raw_datasets_test[0], raw_datasets_test[1]
+        #Batches not needed for testing
 
         #Setup hooks
         def kb_start():
@@ -147,8 +149,8 @@ class Network:
 
 
     def test(self):
-        sample_index = np.random.randint(len(self.sets))
-        test, label = self.sets[sample_index], self.labels[sample_index]
+        sample_index = np.random.randint(len(self.test_sets))
+        test, label = self.test_sets[sample_index], self.test_labels[sample_index]
         final_activations = [[sigmoid(a_l) for a_l in activation] for activation in self.activate(test)][-1]
         res_index =  final_activations.index(max(final_activations))
 
@@ -168,6 +170,7 @@ class Network:
 
         self.train_attempts = 0
         self.train_correct = 0
+
         self.test_attempts = 0
         self.test_correct = 0
 
