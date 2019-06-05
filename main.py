@@ -125,8 +125,8 @@ class Network:
             accuracy = 100 * (self.train_correct / self.train_attempts)
 
             if self.shown:
-                error = sum([(1-sigmoid(activ))**2 if res_index == i else sigmoid(activ)**2 for activ in activs[-1]]) / len(activs[-1])
-                print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10]+"0"*(10-len(str(accuracy)[:10])), "LL Error:", str(error*100)[:10]+"%")
+                error = sum([(1-sigmoid(activ))**2 if res_index == label else sigmoid(activ)**2 for activ in activs[-1]]) / len(activs[-1])
+                #print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10]+"0"*(10-len(str(accuracy)[:10])), "LL Error:", str(error*100)[:10]+"%")
 
             for i, layer in enumerate(activs[::-1]):
                 delta_w_sample = []
@@ -138,8 +138,7 @@ class Network:
                     try:
                         for neuron_j in range(len(activs[::-1][j+1])):
                             delta_w_sample.append(sigmoid(activs[j-1][neuron_j]) * delta_b)
-                            #Compute delta(neuron)(L-1) here
-                            activs[j-2] #Check not on first hidden layer
+                            #Compute delta_a(neuron)(L-1) here
                             delta_a += (self.weights[::-1][i][j][neuron_j]) * (sigmoid(activs[j][neuron_j])*(1-sigmoid(activs[j][neuron_j]))) * (2*(sigmoid(activs[j][neuron_j]) - expected[neuron_j]))
                             expected[neuron_j] += int(-self.learning_rate * delta_a)
                     except IndexError: #Handle last layer
@@ -151,6 +150,8 @@ class Network:
         for i in range(len(delta_bs[0])):
             self.biases[::-1][i] += -self.learning_rate * (sum([biases[i] for biases in delta_bs]) / len(delta_bs))
 
+        for layer in range(len(delta_ws)):
+            pass
 
     def test(self):
         sample_index = np.random.randint(len(self.test_sets))
