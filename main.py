@@ -126,7 +126,7 @@ class Network:
 
             if self.shown:
                 error = sum([(1-sigmoid(activ))**2 if res_index == label else sigmoid(activ)**2 for activ in activs[-1]]) / len(activs[-1])
-                #print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10]+"0"*(10-len(str(accuracy)[:10])), "LL Error:", str(error*100)[:10]+"%")
+                print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10]+"0"*(10-len(str(accuracy)[:10])), "LL Error:", str(error*100)[:10]+"%")
 
             for i, layer in enumerate(activs[::-1]):
                 delta_w_sample = []
@@ -136,13 +136,13 @@ class Network:
                     delta_b_sample.append(delta_b)
                     delta_a = 0
                     try:
-                        for neuron_j in range(len(activs[::-1][j+1])):
+                        for neuron_j in range(len(activs[::-1][j-1])):
                             delta_w_sample.append(sigmoid(activs[j-1][neuron_j]) * delta_b)
                             #Compute delta_a(neuron)(L-1) here
                             delta_a += (self.weights[::-1][i][j][neuron_j]) * (sigmoid(activs[j][neuron_j])*(1-sigmoid(activs[j][neuron_j]))) * (2*(sigmoid(activs[j][neuron_j]) - expected[neuron_j]))
                             expected[neuron_j] += int(-self.learning_rate * delta_a)
-                    except IndexError: #Handle last layer
-                        pass
+                    except IndexError as e: #Handle last layer
+                        raise
 
             delta_ws.append(delta_w_sample)
             delta_bs.append(delta_b_sample)
