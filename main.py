@@ -134,7 +134,7 @@ class Network:
                     delta_a = 0
                     try:
                         for neuron_j in range(len(activs[::-1][i-1])):
-                            delta_w_sample.append(sigmoid(activs[i-1][neuron_j]) * delta_b)
+                            delta_w_sample.append(sigmoid(activs[::-1][i-1][neuron_j]) * delta_b)
                             #Compute delta_a(neuron)(L-1) here
                             try:
                                 delta_a += (self.weights[::-1][i][j][neuron_j]) * (sigmoid(activs[j][neuron_j])*(1-sigmoid(activs[j][neuron_j]))) * (2*(sigmoid(activs[j][neuron_j]) - expected[neuron_j]))
@@ -149,11 +149,14 @@ class Network:
             delta_ws.append(delta_w_sample)
             delta_bs.append(delta_b_sample)
 
+        #Update biases
         for i in range(len(delta_bs[0])):
             self.biases[::-1][i] += -self.learning_rate * (sum([biases[i] for biases in delta_bs]) / len(delta_bs))
 
-        for layer in range(len(delta_ws)):
-            pass
+        #Update weights
+        weight_array = np.concatenate(self.weights[0].flatten(), self.weights[1].flatten(), self.weights[2].flatten()).flatten()
+        for i in range(len(delta_ws[0])):
+            weight_array[::-1][i] = weight_array[::-1][i] + (-self.learning_rate * (sum([weights[i] for weights in delta_ws]) / len(delta_ws)))
 
     def test(self):
         sample_index = np.random.randint(len(self.test_sets))
