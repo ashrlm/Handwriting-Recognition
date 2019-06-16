@@ -109,8 +109,8 @@ class Network:
 
         batch = self.batches[np.random.randint(0, len(self.batches))]
         expected = [label for label in list(batch.values())]
-        delta_ws = [] #List of list of all weight derivates over all training examples
-        delta_bs = []
+        Δws = [] #List of list of all weight derivates over all training examples
+        Δbs = []
         for item, label in zip(batch, expected):
             activs = self.activate(item)
             res_index = activs[-1].index(max(activs[-1]))
@@ -126,37 +126,39 @@ class Network:
                 error = sum([(1-sigmoid(activ))**2 if res_index == label else sigmoid(activ)**2 for activ in activs[-1]]) / len(activs[-1])
                 print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10]+"0"*(10-len(str(accuracy)[:10])), "LL Error:", str(error*100)[:10]+"%")
             for i, layer in enumerate(activs[::-1]):
-                delta_w_sample = []
-                delta_b_sample = []
+                Δw_sample = []
+                Δb_sample = []
                 for j, neuron in enumerate(layer):
-                    delta_b = sigmoid(neuron) * ((sigmoid(neuron)*(1-sigmoid(neuron)))) * (2*(sigmoid(neuron) - label)) #d(sigmoid)/d(w(L)(jk)) * (2(sigmoid(a(l)(jk))) - y(j))
-                    delta_b_sample.append(delta_b)
-                    delta_a = 0
+                    Δb = sigmoid(neuron) * ((sigmoid(neuron)*(1-sigmoid(neuron)))) * (2*(sigmoid(neuron) - label)) #d(sigmoid)/d(w(L)(jk)) * (2(sigmoid(a(l)(jk))) - y(j))
+                    Δb_sample.append(Δb)
+                    Δa = 0
                     try:
                         for neuron_j in range(len(activs[::-1][i-1])):
-                            delta_w_sample.append(sigmoid(activs[::-1][i-1][neuron_j]) * delta_b)
-                            #Compute delta_a(neuron)(L-1) here
+                            Δw_sample.append(sigmoid(activs[::-1][i-1][neuron_j]) * Δb)
+                            #Compute Δa(neuron)(L-1) here
                             try:
-                                delta_a += (self.weights[::-1][i][j][neuron_j]) * (sigmoid(activs[j][neuron_j])*(1-sigmoid(activs[j][neuron_j]))) * (2*(sigmoid(activs[j][neuron_j]) - expected[neuron_j]))
-                                expected[neuron_j] += int(-self.learning_rate * delta_a)
+                                Δa += (self.weights[::-1][i][j][neuron_j]) * (sigmoid(activs[j][neuron_j])*(1-sigmoid(activs[j][neuron_j]))) * (2*(sigmoid(activs[j][neuron_j]) - expected[neuron_j]))
+                                expected[neuron_j] += int(-self.learning_rate * Δa)
                             except IndexError: #Ensure sufficient weights
                                 continue
 
                     except IndexError as e: #Handle last layer
                         pass
 
-            print(len(delta_w_sample))
-            delta_ws.append(delta_w_sample)
-            delta_bs.append(delta_b_sample)
+            print(len(Δw_sample))
+            Δws.append(Δw_sample)
+            Δbs.append(Δb_sample)
 
         #Update biases
-        for i in range(len(delta_bs[0])):
-            self.biases[::-1][i] += -self.learning_rate * (sum([biases[i] for biases in delta_bs]) / len(delta_bs))
+        for i in range(len(Δbs[0])):
+            self.biases[::-1][i] += -self.learning_rate * (sum([biases[i] for biases in Δbs]) / len(Δbs))
 
         #Update weights
         weight_array = np.concatenate(self.weights[0].flatten(), self.weights[1].flatten(), self.weights[2].flatten()).flatten()
-        for i in range(len(delta_ws[0])):
-            weight_array[::-1][i] = weight_array[::-1][i] + (-self.learning_rate * (sum([weights[i] for weights in delta_ws]) / len(delta_ws)))
+        for i in range(len(Δws[0])):
+            weight_array[::-1][i] = weight_array[::-1][i] + (-self.learning_rate * (sum([weights[i] for weights in Δws]) / len(Δws)))
+
+        #TODO: Reshape weight_array
 
     def test(self):
         sample_index = np.random.randint(len(self.test_sets))
