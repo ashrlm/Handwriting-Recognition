@@ -154,7 +154,7 @@ class Network:
             self.biases[::-1][i] += -self.learning_rate * (sum([biases[i] for biases in Δbs]) / len(Δbs))
 
         #Update weights
-        weight_array = np.concatenate(self.weights[0].flatten(), self.weights[1].flatten(), self.weights[2].flatten()).flatten()
+        weight_array = np.concatenate((self.weights[0].flatten(), self.weights[1].flatten(), self.weights[2].flatten())).flatten()
         for i in range(len(Δws[0])):
             weight_array[::-1][i] = weight_array[::-1][i] + (-self.learning_rate * (sum([weights[i] for weights in Δws]) / len(Δws)))
 
