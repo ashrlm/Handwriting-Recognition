@@ -176,7 +176,7 @@ class Network:
         accuracy = 100 * (self.test_correct / self.test_attempts)
 
         if self.shown:
-            error = sum([(1-activ)**2 if res_index == i else activ**2 for activ in final_activations]) / len(final_activations)
+            error = sum([(1-activ)**2 if res_index == i else activ**2 for i, activ in enumerate(final_activations)]) / len(final_activations)
             print("Output:", res_index, "Correct answer:", label, "Accuracy:", str(accuracy)[:10]+"0"*(10-len(str(accuracy)[:10])), "LL Error:", str(error*100)[:10]+"%")
 
     def run(self):
