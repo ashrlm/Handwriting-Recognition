@@ -154,11 +154,14 @@ class Network:
             self.biases[::-1][i] += -self.learning_rate * (sum([biases[i] for biases in Δbs]) / len(Δbs))
 
         #Update weights
-        weight_array = np.concatenate((self.weights[0].flatten(), self.weights[1].flatten(), self.weights[2].flatten())).flatten()
+        weight_array = np.concatenate((self.weights[0].flatten(), self.weights[1].flatten(), self.weights[2].flatten())).flatten()[::-1]
         for i in range(len(Δws[0])):
-            weight_array[::-1][i] = weight_array[::-1][i] + (-self.learning_rate * (sum([weights[i] for weights in Δws]) / len(Δws)))
+            weight_array[::-1][i] = weight_array[i] + (-self.learning_rate * (sum([weights[i] for weights in Δws]) / len(Δws)))
 
-        #TODO: Reshape weight_array
+        self.weights[0] = weight_array[:7840].reshape(10, 784) #784 * 10
+        self.weights[1] = weight_array[7840:7940].reshape(10, 10) #10*10 + 7840
+        self.weights[2] = weight_array[7940:].reshape(10, 10) #Final 100 elements
+
 
     def test(self):
         sample_index = np.random.randint(len(self.test_sets))
