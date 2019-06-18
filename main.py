@@ -145,7 +145,6 @@ class Network:
                     except IndexError as e: #Handle last layer
                         pass
 
-            print(len(Δw_sample))
             Δws.append(Δw_sample)
             Δbs.append(Δb_sample)
 
