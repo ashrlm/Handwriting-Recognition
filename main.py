@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 
-#TODO: Check ds loading
-#TODO: Update weights
-
 import ast
 import math
 import sys
