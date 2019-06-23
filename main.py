@@ -199,9 +199,9 @@ class Network:
                 self.train()
 
 def sigmoid(x):
-    if x < 0:
-        return 1 - 1 / (1 + math.exp(x))
     return 1 / (1 + math.exp(-x))
+
+#TODO: Inv sig prime
 
 def load_dataset(ds_path, training=True, mnist_format=True):
     if mnist_format:
