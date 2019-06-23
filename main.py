@@ -3,6 +3,7 @@
 import ast
 import math
 import sys
+import time
 import json
 import threading
 
@@ -66,6 +67,7 @@ class Network:
         self.shown = True
         self.testing = testing
         self.running = True
+        self.mode_delay = False
 
     def activate(self, sample):
         activs = [[0] * 784]
@@ -97,6 +99,7 @@ class Network:
             print("Training:", self.testing)
             self.testing = not self.testing
         self.prev_key = str(key)
+        self.mode_delay = True
 
     def train(self):
 
@@ -186,6 +189,10 @@ class Network:
         self.test_correct = 0
 
         while self.running:
+            if self.mode_delay:
+                self.mode_delay = False
+                time.sleep(3)
+
             if self.testing:
                 self.test()
             else:
