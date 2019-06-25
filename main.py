@@ -199,7 +199,7 @@ class Network:
                 self.train()
 
 def sigmoid(x):
-    return 1 / (1 + math.exp(-x))
+    return 1 / (1 + math.exp(min(-x, 709)))
 
 def inv_sig(x):
     return -log((1/x)-1, math.e)
@@ -249,16 +249,27 @@ def parse():
 
     return data
 
+def save_data(name, path, data):
+    while True:
+        tmp = input("Save", name, "? [Y/n] ")+" ").lower()[0]
+        if tmp == "n":
+            return
+        elif tmp in ("y", ""):
+            np.savez(path, data)
+            return
+        else:
+            print("Invalid option")
+
+
 def main():
     network = Network(*parse())
     try:
         network.run()
     except KeyboardInterrupt:
         network.running = False
-        if (input("Save weights? [Y/n] ")+" ").lower()[0] != "n":
-            np.savez('./weights', *network.weights)
-        if (input("Save biases? [Y/n] ")+" ").lower()[0] != "n":
-            np.save('./biases.npy', [network.biases]) #Wrap in new array to prevent 0d arrays
 
+        save_data('weights', './weights', *network.weights)
+        save_data('biases', './biases.npy', [network.biases])
+        
 if __name__ == "__main__":
     main()
