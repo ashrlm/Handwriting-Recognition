@@ -249,17 +249,6 @@ def parse():
 
     return data
 
-def save_data(name, path, data):
-    while True:
-        tmp = input("Save", name, "? [Y/n] ")+" ").lower()[0]
-        if tmp == "n":
-            return
-        elif tmp in ("y", ""):
-            np.savez(path, data)
-            return
-        else:
-            print("Invalid option")
-
 
 def main():
     network = Network(*parse())
@@ -268,8 +257,25 @@ def main():
     except KeyboardInterrupt:
         network.running = False
 
-        save_data('weights', './weights', *network.weights)
-        save_data('biases', './biases.npy', [network.biases])
-        
+        while True:
+            tmp = (input("Save weights? [Y/n] ")+" ").lower()[0]
+            if tmp == "n":
+                break
+            elif tmp in ("y", ""):
+                np.savez('./weights'. *network.weights)
+                break
+            else:
+                print("Invalid option")
+
+            while True:
+                tmp = (input("Save biases? [Y/n] ")+" ").lower()[0]
+                if tmp == "n":
+                    break
+                elif tmp in ("y", ""):
+                    np.save('./biases.npy', [network.biases])
+                    break
+                else:
+                    print("Invalid option")
+
 if __name__ == "__main__":
     main()
