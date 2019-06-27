@@ -262,20 +262,20 @@ def main():
             if tmp == "n":
                 break
             elif tmp in ("y", ""):
-                np.savez('./weights'. *network.weights)
+                np.savez('./weights'. network.weights)
                 break
             else:
                 print("Invalid option")
 
-            while True:
-                tmp = (input("Save biases? [Y/n] ")+" ").lower()[0]
-                if tmp == "n":
-                    break
-                elif tmp in ("y", ""):
-                    np.save('./biases.npy', [network.biases])
-                    break
-                else:
-                    print("Invalid option")
+        while True:
+            tmp = (input("Save biases? [Y/n] ")+" ").lower()[0]
+            if tmp == "n":
+                break
+            elif tmp in ("y", ""):
+                np.save('./biases.npy', [network.biases])
+                break
+            else:
+                print("Invalid option")
 
 if __name__ == "__main__":
     main()
