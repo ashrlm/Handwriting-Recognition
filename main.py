@@ -202,7 +202,7 @@ def sigmoid(x):
     return 1 / (1 + math.exp(min(-x, 709)))
 
 def inv_sig(x):
-    return -log((1/x)-1, math.e)
+    return -math.log((1/x)-1, math.e)
 
 def load_dataset(ds_path, training=True, mnist_format=True):
     if mnist_format:
